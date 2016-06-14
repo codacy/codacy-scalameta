@@ -1,18 +1,14 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/grade/448773a482094001a1104979ca00350c)](https://www.codacy.com)
 
-# Codacy ScalaHomebrew
+# Codacy scala.meta
 
-This is our home made docker engine for scala patterns.
-You can also create a docker to integrate the tool and language of your choice!
+This is the codacy engine for scala static code analysis build on top of scala.meta.
 Check the **Docs** section for more information.
 
 ## Developing
 
 ### Quasiquotes:
-https://github.com/scalameta/scalameta/blob/master/docs/quasiquotes.md
-
-### Java Security Patterns:
-http://h3xstream.github.io/find-sec-bugs/
+https://github.com/scalameta/scalameta/bob/master/notes/quasiquotes.md
 
 ### Tool Integration:
 http://docs.codacy.com/v1.5/docs/tool-developer-guide
@@ -25,7 +21,7 @@ val code = """ .... """
 
 val tree = code.parse[Source]
 
-codacy.scalaMetaParser.patterns.Custom_Scala_WeakDigest(tree, None)
+codacy.patterns.Custom_Scala_ElseIf(tree)
 
 //To see the tree structure:
 
