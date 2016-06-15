@@ -19,7 +19,7 @@ lazy val root = project.in(file("."))
 //generates the resources a codacy-engine expects
 lazy val genResources = project.in(file("genResources"))
   .settings(scalaVersion := scalaV)
-  .settings( (unmanagedClasspath in Compile) ++=  (baseDirectory.value / ".." / "lib").listFiles().toList )
+  .settings( (unmanagedClasspath in Compile) ++= Option((baseDirectory.value / ".." / "lib").listFiles()).toList.flatMap(_.toList) )
   .dependsOn(macros,basePatterns)
 
 //the core that defines patterns and results

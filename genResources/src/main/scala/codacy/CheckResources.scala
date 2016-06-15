@@ -56,7 +56,7 @@ object CheckResources{
     val allDescriptions = classLoader.findResources("docs/description/description.json").flatMap{ case uri =>
       val fileContent = uri.toFile.contentAsString
       Json.parse(fileContent).as[List[JsValue]]
-    }.toList.sortBy(v => (v \ "patternId").asOpt[String] )
+    }.toList.distinct.sortBy(v => (v \ "patternId").asOpt[String] )
 
     val destFile = (dest / "docs" / "description" / "description.json").createIfNotExists(asDirectory = false, createParents = true)
 
