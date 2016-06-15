@@ -25,7 +25,7 @@ The rules are:
 2) all arguments need to define defaults
 3) json readers and writers must exist for the argument types. (Currently that means primitive types and ```scala.util.matching.Regex```)
 
-Additional steps can be found in the chapter Tool Integration
+Additional steps can be found in the chapter Tool Integration with one exeption: there is no need to explicitly add pattern parameters to patterns defined in ```patterns.json``` since that's already being covered by rule 2 of the configuration rules.
 For a full example check out the [existing patterns](https://github.com/codacy/codacy-scalameta/tree/master/patterns-base/src/main)
 
 ### Quasiquotes:
