@@ -1,65 +1,52 @@
 package codacy.macros
 
-import java.net.{URI, URLClassLoader}
-import java.nio.file.FileSystemAlreadyExistsException
+import java.net.URLClassLoader
 
-import better.files._
 import codacy.base.PatternCompanion
-import codacy.dockerApi.{ParameterSpec, PatternId, PatternSpec, Spec}
+import codacy.dockerApi.{PatternId, Spec}
+import codacy.utils.FileHelpers
 import play.api.libs.json._
 
-import scala.collection.JavaConversions._
-import scala.language.experimental.macros
 import scala.reflect.macros.whitebox._
-import scala.util.{Failure, Success, Try}
 
 object Patterns{
+  import scala.language.experimental.macros
+
   def fromResources:Map[PatternId,PatternCompanion] = macro JReadsMacro.impl
+  def params:Map[PatternId,List[JsObject]] = macro JReadsMacro.impl2
 }
 
-object JReadsMacro {
+private[macros] object JReadsMacro {
 
-  def allPatternJsons(classLoader: URLClassLoader) = {
-    classLoader.findResources("patterns.json").toList.map{ case url =>
-      val uri: URI = url.toURI
-      val env = new java.util.HashMap[String,String]
-      env.put("create", "true")
-      Try(
-        java.nio.file.FileSystems.newFileSystem(uri, env)
-      ) match{
-        case Success(fs) =>
-          fs
-        case Failure(ex: FileSystemAlreadyExistsException) =>
-          ()
-        case Failure(ex: IllegalArgumentException) =>
-          ()
-        case Failure(ex) =>
-          Console.err.println(s"[${ex.getClass.getSimpleName}] - ${ex.getMessage}")
-      }
+  implicit class ContextExtension(context:Context){
+    lazy val patternIds = {
+      FileHelpers.allPatternJsons(new URLClassLoader(context.classPath.toArray))
+    }.map{ case json =>
+      (Json.parse(json.contentAsString).as[JsObject] ++ Json.obj("name" -> "hb")).as[Spec]
+    }.flatMap(_.patterns.map(_.patternId))
+  }
 
-      File(java.nio.file.Paths.get(uri))
+  def impl2(c: Context): c.Expr[Map[PatternId,List[JsObject]]] = {
+    import c.universe._
+
+    implicit val l = Liftable( (patternId:PatternId) => q"new codacy.dockerApi.PatternId(${patternId.value})")
+
+    val tuples = c.patternIds.map{ case pID =>
+      val p = Literal(Constant(pID.value))
+      q"""($pID, codacy.macros.Pattern.params($p))"""
     }
+
+    c.Expr[Map[PatternId,List[JsObject]]](q"Map(..$tuples)" )
   }
 
   def impl(c: Context): c.Expr[Map[PatternId,PatternCompanion]] = {
     import c.universe._
 
-    val loader = new URLClassLoader(c.classPath.toArray)
+    implicit val l = Liftable( (patternId:PatternId) => q"new codacy.dockerApi.PatternId(${patternId.value})")
 
-    val tuples = allPatternJsons(loader).flatMap{ case json =>
-      (Json.parse(json.contentAsString).as[JsObject] ++ Json.obj("name" -> "hb")).asOpt[Spec]
-    }.flatMap{ case spec =>
-      spec.patterns.map{ case spec => (spec.patternId.value, spec.parameters.getOrElse(Set.empty))}
-    }.map{ case (id,params) =>
-      val p = Literal(Constant(id))
-
-      val jsonConfig = JsObject(params.toList.map{ case fields =>
-        fields.name.value -> fields.default
-      }.toMap)
-
-      val jString = Literal(Constant(Json.stringify(jsonConfig)))
-
-      q"""(new codacy.dockerApi.PatternId($id), codacy.macros.Pattern.companion($p,$jString))"""
+    val tuples = c.patternIds.map{ case pID =>
+      val p = Literal(Constant(pID.value))
+      q"""($pID, codacy.macros.Pattern.companion($p))"""
     }
 
     c.Expr[Map[PatternId,PatternCompanion]](q"Map(..$tuples)" )

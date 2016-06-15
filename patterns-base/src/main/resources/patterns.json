@@ -6,14 +6,7 @@
   }, {
     "patternId" : "Custom_Scala_BadTagPresenceCheck",
     "category" : "CodeStyle",
-    "level" : "Info",
-    "parameters" : [ {
-      "name" : "fixmeTags",
-      "default" : [ "FixMe", "ToDo" ]
-    }, {
-      "name" : "caseSensitive",
-      "default" : false
-    } ]
+    "level" : "Info"
   }, {
     "patternId" : "Custom_Scala_CallByNameAsLastArguments",
     "category" : "ErrorProne",
@@ -49,14 +42,7 @@
   }, {
     "patternId" : "Custom_Scala_FieldNamesChecker",
     "category" : "CodeStyle",
-    "level" : "Info",
-    "parameters" : [ {
-      "name" : "regex",
-      "default" : "^[a-z][A-Za-z0-9]*$"
-    }, {
-      "name" : "includeEnums",
-      "default" : false
-    } ]
+    "level" : "Info"
   }, {
     "patternId" : "Custom_Scala_GetCalls",
     "category" : "ErrorProne",
@@ -76,11 +62,7 @@
   }, {
     "patternId" : "Custom_Scala_ImportsSortedAlphabetically",
     "category" : "CodeStyle",
-    "level" : "Info",
-    "parameters" : [ {
-      "name" : "caseSensitive",
-      "default" : true
-    } ]
+    "level" : "Info"
   }, {
     "patternId" : "Custom_Scala_IncompletePatternMatching",
     "category" : "ErrorProne",
@@ -148,11 +130,7 @@
   }, {
     "patternId" : "Custom_Scala_TypeParameterName",
     "category" : "CodeStyle",
-    "level" : "Warning",
-    "parameters" : [ {
-      "name" : "regex",
-      "default" : "^[A-Z]$"
-    } ]
+    "level" : "Warning"
   }, {
     "patternId" : "Custom_Scala_TypedEquality",
     "category" : "ErrorProne",

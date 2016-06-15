@@ -19,7 +19,7 @@ lazy val root = project.in(file("."))
 //generates the resources a codacy-engine expects
 lazy val genResources = project.in(file("genResources"))
   .settings(scalaVersion := scalaV)
-  .dependsOn(macros,common)
+  .dependsOn(macros,basePatterns)
 
 //the core that defines patterns and results
 lazy val core = project.in(file("core"))
@@ -47,13 +47,13 @@ lazy val common = project.in(file("common"))
   .settings(scalaVersion := scalaV)
   .settings( libraryDependencies ++= Seq(
     Dependencies.codacyEngine,
-    Dependencies.playJson
+    Dependencies.playJson,
+    Dependencies.betterFiles
   ))
 
 lazy val macros = project.in(file("macros")).
   settings(scalaVersion := scalaV).
   settings(libraryDependencies += Def.setting(scalaReflect).value).
-  settings(libraryDependencies += betterFiles).
   dependsOn(common)
 
 enablePlugins(JavaAppPackaging)
