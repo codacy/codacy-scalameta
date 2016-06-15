@@ -19,6 +19,7 @@ lazy val root = project.in(file("."))
 //generates the resources a codacy-engine expects
 lazy val genResources = project.in(file("genResources"))
   .settings(scalaVersion := scalaV)
+  .settings( (unmanagedClasspath in Compile) ++=  (baseDirectory.value / ".." / "lib").listFiles().toList )
   .dependsOn(macros,basePatterns)
 
 //the core that defines patterns and results
@@ -77,7 +78,7 @@ resourceGenerators in Compile += Def.task {
   val curFiles = allFiles(file)
 
   val result = (runner in Compile).value.run(
-    "codacy.CheckResources", (dependencyClasspath in Compile).value.files, Array(file.getPath), streams.value.log
+    "codacy.CheckResources", (dependencyClasspath in Compile).value.files ++ (unmanagedClasspath in Compile).value.files , Array(file.getPath), streams.value.log
   )
 
   //this ensures that compilation fails on erroneous resources!
