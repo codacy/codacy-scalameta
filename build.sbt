@@ -76,9 +76,12 @@ resourceGenerators in Compile += Def.task {
 
   val curFiles = allFiles(file)
 
-  (runner in Compile).value.run(
+  val result = (runner in Compile).value.run(
     "codacy.CheckResources", (dependencyClasspath in Compile).value.files, Array(file.getPath), streams.value.log
   )
+
+  //this ensures that compilation fails on erroneous resources!
+  result.foreach( r => throw new Exception(s"resource generation failed $r"))
 
   val newFiles = allFiles(file) -- curFiles
 
