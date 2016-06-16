@@ -23,7 +23,9 @@ Sometimes one might want to change the behavior of the pattern according to some
 The rules are:
 
 1) it needs to be a case class
+
 2) all arguments need to define defaults
+
 3) json readers and writers must exist for the argument types. (Currently that means primitive types and ```scala.util.matching.Regex```)
 
 Additional steps can be found in the chapter Tool Integration with one exeption: there is no need to explicitly add pattern parameters to patterns defined in ```patterns.json``` since that's already being covered by rule 2 of the configuration rules.
@@ -37,6 +39,7 @@ https://support.codacy.com/hc/en-us/articles/207994725-Tool-Developer-Guide
 
 ### Testing with "sbt console":
 
+```
 import scala.meta._
 
 val code = """ .... """
@@ -48,6 +51,7 @@ codacy.patterns.Custom_Scala_ElseIf(tree)
 //To see the tree structure:
 
 tree.show[Structure]
+```
 
 ## Usage
 
