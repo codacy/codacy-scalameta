@@ -1,4 +1,5 @@
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4d6036c6e85244eba96dba27e5a03656)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=codacy/codacy-scalameta&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/72869cd556c54624bcb36058c72d8371)](https://www.codacy.com/app/Codacy/codacy-scalameta?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=codacy/codacy-scalameta&amp;utm_campaign=Badge_Grade)
+[![Build Status](https://circleci.com/gh/codacy/codacy-scalameta.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/codacy/codacy-scalameta)
 
 # Codacy scala.meta
 
