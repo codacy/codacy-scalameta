@@ -92,6 +92,10 @@
   "patternId" : "Custom_Scala_ReservedKeywords",
   "title" : "Avoid using reserved keywords",
   "description" : "Don't use reserved scala keywords to name things.",
+  "parameters" : [ {
+    "name" : "exclude",
+    "description" : "Set of reserved keywords excluded from the search"
+  }],
   "timeToFix" : 5
 }, {
   "patternId" : "Custom_Scala_DefaultPatternMatching",
