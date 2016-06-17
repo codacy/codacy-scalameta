@@ -69,7 +69,7 @@ object CodacyScalameta extends Tool {
                 case util.Success(resList) =>
                   resList.map { case res =>
                     Issue(sourcePath, ResultMessage(res.message.value), patternId, ResultLine(res.position.start.line + 1))
-                  }.toSet
+                  }.toSeq.distinct
                 case util.Failure(err) =>
                   List(FileError(sourcePath, Option(ErrorMessage(err.getMessage))))
               }
