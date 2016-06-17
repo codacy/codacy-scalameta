@@ -20,7 +20,12 @@ object FileHelpers {
       case Failure(e:java.nio.file.FileSystemNotFoundException) =>
         val env = new java.util.HashMap[String,String]
         env.put("create", "true")
-        java.nio.file.FileSystems.newFileSystem(uri, env)
+        Try(java.nio.file.FileSystems.newFileSystem(uri, env))
+          .recover{ case _:java.nio.file.FileSystemAlreadyExistsException => () } match{
+          case Success(_) => ()
+          case Failure(err) => throw err
+        }
+
         fileFromUri(uri)
       case Failure(other) =>
         throw other

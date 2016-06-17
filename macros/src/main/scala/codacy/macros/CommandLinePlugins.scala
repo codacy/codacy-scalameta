@@ -20,9 +20,8 @@ private[macros] object CommandLinePluginsMacro{
 
     val plugins = new URLClassLoader(context.classPath.toArray).findResources("codacy-engine-plugin").toList.map{ case uri =>
       val fullName = uri.toFile.contentAsString
-      val Plugin = context.mirror.staticModule(fullName)
-
-      q"${Plugin.asTerm}"
+      val Plugin = context.mirror.staticModule(fullName).asTerm
+      q"$Plugin"
     }
 
     context.Expr[List[CommandLinePlugin]](

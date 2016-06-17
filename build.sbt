@@ -31,15 +31,16 @@ lazy val basePatterns = project.in(file("patterns-base"))
   .settings(scalaVersion := scalaV)
   .dependsOn(core)
   .settings(
-    mappings in (Compile, packageBin) <++= (scalaSource in Compile) map { sourceDir =>
+    resourceGenerators in Compile += Def.task {
+      val dest: File = (resourceManaged in Compile).value / "patterns"
+      val src = (scalaSource in Compile).value / "codacy" / "patterns"
 
-      val files = sourceDir / "codacy" / "patterns"
-      val dest = "patterns"
+      val all = for {
+        path <- src.listFiles().toList if path.toString.endsWith(".scala")
+      } yield path -> dest / path.name
 
-      for {
-        path <- files.listFiles().toList if path.toString.endsWith(".scala")
-      } yield path -> s"${dest}/${path.name}"
-    }
+      IO.copy(all).toList
+    }.taskValue
   )
 
 //the bridge between a codacy-engine and scala.meta patterns
@@ -97,7 +98,7 @@ val dockerUser = "docker"
 
 daemonUser in Docker := dockerUser
 
-dockerBaseImage := "frolvlad/alpine-oraclejdk8"
+dockerBaseImage := "frolvlad/alpine-oraclejdk8:cleaned"
 
 dockerCommands := dockerCommands.value.flatMap{
   case cmd@Cmd("WORKDIR","/opt/docker") => List(cmd,
