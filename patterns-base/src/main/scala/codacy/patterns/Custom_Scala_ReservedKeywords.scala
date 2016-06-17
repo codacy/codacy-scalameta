@@ -7,8 +7,8 @@ import scala.meta._
 class Custom_Scala_ReservedKeywords(config:Custom_Scala_ReservedKeywords.Configuration=Custom_Scala_ReservedKeywords.Configuration()) extends Pattern {
   override def apply(tree: Tree) = {
     tree.collect{
-      case t:Member if reserved.contains(t.name.value) =>
-        Result(message(t.name),t)
+      case m:Member if reserved.contains(m.name.value) && m.name.toString.nonEmpty =>
+        Result(message(m.name),m)
     }
   }
 
