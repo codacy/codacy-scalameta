@@ -9,7 +9,7 @@ val scalameta     = "org.scalameta" %% "scalameta" % "1.0.0" withSources()
 val commonsIO     = "commons-io" % "commons-io" % "2.4"
 val scalaXml      = "org.scala-lang.modules" %% "scala-xml" % "1.0.4"
 
-version := "0.1.0"
+version := "0.1.1"
 
 scalaVersion := scalaV
 
