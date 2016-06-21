@@ -4,8 +4,9 @@ import codacy.base.{Pattern, Result}
 import scala.meta._
 import scala.util.matching.Regex
 
-class Custom_Scala_FieldNamesChecker(configuration: Custom_Scala_FieldNamesChecker.Configuration=Custom_Scala_FieldNamesChecker.Configuration())
-  extends Pattern{
+class Custom_Scala_FieldNamesChecker(configuration: Custom_Scala_FieldNamesChecker.Configuration) extends Pattern{
+
+  def this() = this(Custom_Scala_FieldNamesChecker.Configuration())
 
   override def apply(tree: Tree): Set[Result] = {
     tree.collect{
@@ -28,7 +29,7 @@ class Custom_Scala_FieldNamesChecker(configuration: Custom_Scala_FieldNamesCheck
   }
 
   private[this] def isEnumValDefRegexOrDecl(parent:Option[Tree],expr:Option[Tree]=None,tpe:Option[Tree]=None) = {
-    val extendsEnumeration:Boolean = parent.collect{ case template"{ ..$stats } with ..$ctorcalls { $param => ..$stats2 }" =>
+    val extendsEnumeration:Boolean = parent.collect{ case template"{ ..$stats } with ..${ctorcalls:Seq[Ctor.Call]} { $param => ..$stats2 }" =>
       ctorcalls.exists{
         case ctor"Enumeration" => true
         case _ => false

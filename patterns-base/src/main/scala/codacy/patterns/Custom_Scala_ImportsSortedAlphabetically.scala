@@ -1,17 +1,16 @@
 package codacy.patterns
 
 import codacy.base.{Pattern, Result}
-
 import scala.meta._
 
-/* only consecutive import statements */
-class Custom_Scala_ImportsSortedAlphabetically(config:Custom_Scala_ImportsSortedAlphabetically.Configuration=Custom_Scala_ImportsSortedAlphabetically.Configuration())
-  extends  Pattern{
+class Custom_Scala_ImportsSortedAlphabetically(config:Custom_Scala_ImportsSortedAlphabetically.Configuration) extends Pattern{
+
+  def this() = this(Custom_Scala_ImportsSortedAlphabetically.Configuration())
 
   override def apply(tree: Tree): Iterable[Result] = {
-    tree.collect{
-      case t@q"import ..$importersnel" => (t,importersnel.headOption)
-    }.groupBy{ case (tree,_) => tree.parent }.
+    tree.collect[(Tree,Option[Importer])]{
+      case t@q"import ..${importersnel:Seq[Importer]}" => (t,importersnel.headOption)
+    }.groupBy{ case (tree, _) => tree.parent }.
       collect{ case (Some(parent),importsWithImporters) =>
         lazy val treeToImporter: Map[Tree, Option[Importer]] = importsWithImporters.toMap
 
@@ -27,7 +26,6 @@ class Custom_Scala_ImportsSortedAlphabetically(config:Custom_Scala_ImportsSorted
             if (currentLastList.isEmpty) lists else lists :+ Seq.empty
           }
         }.filter(_.nonEmpty)
-
       }.flatten.flatMap( firstUnsortedInBlock(_,config.caseSensitive) ).
       map{ case tree => Result(message(tree),tree) }
   }

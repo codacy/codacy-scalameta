@@ -3,8 +3,9 @@ package codacy.patterns
 import codacy.base.{Pattern, Result}
 import scala.meta._
 
-class Custom_Scala_BadTagPresenceCheck(config:Custom_Scala_BadTagPresenceCheck.Configuration=Custom_Scala_BadTagPresenceCheck.Configuration())
-  extends Pattern{
+class Custom_Scala_BadTagPresenceCheck(config:Custom_Scala_BadTagPresenceCheck.Configuration) extends Pattern{
+
+  def this() = this(Custom_Scala_BadTagPresenceCheck.Configuration())
 
   override def apply(tree: Tree): Set[Result] = {
     tree.tokens.collect{ case comment:Token.Comment if hasFixme(comment.value) =>
