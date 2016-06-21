@@ -4,7 +4,10 @@ import codacy.base.Pattern
 
 import scala.meta._
 
-class Custom_Scala_ReservedKeywords(config:Custom_Scala_ReservedKeywords.Configuration=Custom_Scala_ReservedKeywords.Configuration()) extends Pattern {
+class Custom_Scala_ReservedKeywords(config:Custom_Scala_ReservedKeywords.Configuration) extends Pattern {
+
+  def this() = this(Custom_Scala_ReservedKeywords.Configuration())
+
   override def apply(tree: Tree) = {
     tree.collect{
       case m:Member if reserved.contains(m.name.value) && m.name.toString.nonEmpty =>
