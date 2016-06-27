@@ -9,7 +9,7 @@ import play.api.libs.json.{JsError, JsSuccess, Reads}
 
 import scala.meta._
 import scala.util.matching.Regex
-import scala.util.{Success, Try}
+import scala.util.{Failure, Success, Try}
 
 
 object CodacyScalameta extends Tool {
@@ -61,8 +61,8 @@ object CodacyScalameta extends Tool {
       case path if isScala(path) =>
         lazy val sourcePath = SourcePath(DockerEnvironment.sourcePath.relativize(path).toString)
 
-        path.toFile().parse[Source] match {
-          case Parsed.Success(tree) =>
+        Try(path.toFile().parse[Source]) match {
+          case Success(Parsed.Success(tree)) =>
 
             fNewPatterns.flatMap { case (patternId, pat) =>
               Try(pat.apply(tree)) match {
@@ -75,8 +75,11 @@ object CodacyScalameta extends Tool {
               }
             }
 
-          case Parsed.Error(position, message, details) =>
+          case Success(Parsed.Error(position, message, details)) =>
             List(FileError(sourcePath, Option(ErrorMessage(message))))
+
+          case Failure(error) =>
+            List(FileError(sourcePath, Option(ErrorMessage(error.getMessage))))
         }
 
       case _ => List.empty
