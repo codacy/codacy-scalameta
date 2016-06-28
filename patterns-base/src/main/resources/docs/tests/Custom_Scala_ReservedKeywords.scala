@@ -27,4 +27,9 @@ package docs{
     object `object`
     //#Warn: Custom_Scala_ReservedKeywords
     class `class`{ }
+
+  //a previously detected false positive
+  class ConsulRequestBasics(token: Option[String], client: WSClient) {
+    def this(token: Option[String])(implicit app: Application) = this(token, WS.client)
+  }
 }

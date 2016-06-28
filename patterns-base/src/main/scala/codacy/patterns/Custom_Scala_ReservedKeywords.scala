@@ -10,7 +10,7 @@ class Custom_Scala_ReservedKeywords(config:Custom_Scala_ReservedKeywords.Configu
 
   override def apply(tree: Tree) = {
     tree.collect{
-      case m:Member if reserved.contains(m.name.value) && m.name.toString.nonEmpty =>
+      case m:Member if reserved.contains(m.name.toString) && m.name.toString.nonEmpty =>
         Result(message(m.name),m)
     }
   }
@@ -18,7 +18,7 @@ class Custom_Scala_ReservedKeywords(config:Custom_Scala_ReservedKeywords.Configu
   private[this] lazy val reserved = {
     (scala.reflect.runtime.universe match{ case table: scala.reflect.internal.SymbolTable =>
       table.nme.keywords.map(_.decodedName.toString)
-    }).filterNot( config.exclude.contains )
+    }).filterNot( config.exclude.contains ).map{ case keyWord => s"""`$keyWord`"""}
   }
 
   private[this] def message(name: Name) = Message(s"$name is a reserved keyword don't use it as a name")
