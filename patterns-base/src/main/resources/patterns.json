@@ -159,5 +159,9 @@
     "patternId" : "Custom_Scala_WithNameCalls",
     "category" : "ErrorProne",
     "level" : "Warning"
+  }, {
+    "patternId": "MultipleStringLiteralsChecker",
+    "level": "Info",
+    "category": "CodeStyle"
   } ]
 }

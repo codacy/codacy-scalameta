@@ -224,4 +224,9 @@
   "title" : "Enforce typed equality comparison",
   "description" : "Prohibits using the untyped operators == and !=.",
   "timeToFix" : 5
+}, {
+  "patternId": "MultipleStringLiteralsChecker",
+  "title": "Prohibit duplicates string literals",
+  "description": "Prohibits usage of duplicated string literals.",
+  "timeToFix": 5
 }]
