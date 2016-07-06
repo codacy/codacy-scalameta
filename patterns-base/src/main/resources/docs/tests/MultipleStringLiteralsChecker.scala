@@ -33,4 +33,14 @@ class MultipleStringLiteralsChecker {
   //#Info: MultipleStringLiteralsChecker
   var ib = t"t_inerpolated"
   var ib2 = "t_inerpolated"
+
+
+  val something = s"some text is ${a2}"
+  val somethingElse = s"some text is not ${a3}"
+
+  Logger.warn(s"Could not get (${branch.identifier})")
+  Logger.info(s"Got ${commits.length} commits (${branch.identifier})")
+  val existingCommits = SystemInstruments.time(s"Getting existingCommits for project ${branch.projectId} branch ${branch.identifier}") {
+    ???
+  }
 }
