@@ -1,6 +1,7 @@
 package codacy.patterns
 
 import codacy.base.{Pattern, Result}
+
 import scala.meta._
 import scala.util.matching.Regex
 
@@ -38,6 +39,7 @@ class Custom_Scala_FieldNamesChecker(configuration: Custom_Scala_FieldNamesCheck
 
     lazy val exprIsValue:Boolean = expr.exists{
       case q"${Term.Name(value)}" => value == "Value"
+      case q"${Term.Apply(Term.Name(name), _)}" => name == "Value"
       case _ => false
     }
 

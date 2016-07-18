@@ -156,7 +156,7 @@
     "description" : "Regular expression"
   }, {
     "name" : "includeEnums",
-    "description" : "usually Enum Values follow a different naming convention, by enabling the parameter you can include them"
+    "description" : "Enforce naming convention for Enumeration Values"
   } ]
 }, {
   "patternId" : "Custom_Scala_IndexOfPositive",

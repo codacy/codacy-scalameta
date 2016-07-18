@@ -8,6 +8,7 @@ trait Foo[A]{
     //enum styles
     object E1 extends Enumeration{
         val A,B,C = Value
+        val D = Value(42)
     }
 
     //#Info: Custom_Scala_FieldNamesChecker
