@@ -32,7 +32,7 @@ Additional steps can be found in the chapter Tool Integration with one exeption:
 For a full example check out the [existing patterns](https://github.com/codacy/codacy-scalameta/tree/master/patterns-base/src/main)
 
 ### Quasiquotes:
-https://github.com/scalameta/scalameta/bob/master/notes/quasiquotes.md
+https://github.com/scalameta/scalameta/blob/master/notes/quasiquotes.md
 
 ### Tool Integration:
 https://support.codacy.com/hc/en-us/articles/207994725-Tool-Developer-Guide
