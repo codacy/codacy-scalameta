@@ -3,7 +3,7 @@
 
 # Codacy scala.meta
 
-This is the codacy engine for scala static code analysis build on top of scala.meta.
+This is the [codacy](https://www.codacy.com/) engine for scala static code analysis build on top of scala.meta.
 Check the **Docs** section for more information.
 
 ## Developing
