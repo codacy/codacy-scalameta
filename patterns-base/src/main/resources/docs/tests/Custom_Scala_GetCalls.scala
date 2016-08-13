@@ -45,4 +45,6 @@ class Get {
   Bla.get[Int](352)
   Bla.get[String]
 
+  Option(1).get()
+
 }
