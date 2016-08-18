@@ -11,6 +11,16 @@ machine:
 dependencies:
   override:
     - sbt "set version in Docker := \"latest\"" "set name := \"$CIRCLE_PROJECT_REPONAME\"" docker:publishLocal
+  cache_directories:
+    - "~/.ivy2"
+    - "~/.m2"
+    - "~/.sbt"
+    - "~/codacy-plugins-test/target"
+    - "~/codacy-plugins-test/project/target"
+    - "~/codacy-plugins-test/project/project"
+    - "~/$CIRCLE_PROJECT_REPONAME/target"
+    - "~/$CIRCLE_PROJECT_REPONAME/project/target"
+    - "~/$CIRCLE_PROJECT_REPONAME/project/project"
 
 test:
   pre:
