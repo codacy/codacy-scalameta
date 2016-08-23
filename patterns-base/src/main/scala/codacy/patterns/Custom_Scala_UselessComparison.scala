@@ -1,6 +1,6 @@
 package codacy.patterns
 
-import codacy.base.Pattern
+import codacy.base.{Pattern, Result}
 
 import scala.meta._
 
