@@ -1,232 +1,292 @@
-[ {
-  "patternId" : "Custom_Scala_ActiveNames",
-  "title" : "Enforce Active Names",
-  "description" : "Use active names for operations with side effects.",
-  "timeToFix" : 5
-}, {
-  "patternId" : "Custom_Scala_DirectPromiseCreation",
-  "title" : "Avoid Direct Promise Creation",
-  "description" : "Always try to avoid creating Promise instances directly.",
-  "timeToFix" : 5
-}, {
-  "patternId" : "Custom_Scala_ReturnFinally",
-  "title" : "Avoid Control flow inside finally",
-  "description" : "Avoid using return statement inside finally.",
-  "timeToFix" : 30
-}, {
-  "patternId" : "Custom_Scala_CallByNameAsLastArguments",
-  "title" : "Enforce call-by-name as last arguments",
-  "description" : "Only use call-by-name arguments in the last position of the last argument list.",
-  "timeToFix" : 5
-}, {
-  "patternId" : "Custom_Scala_JavaThreads",
-  "title" : "Avoid creating Threads",
-  "description" : "Implement concurrent behaviour by using Futures.",
-  "timeToFix" : 5
-}, {
-  "patternId" : "Custom_Scala_CollectionLastHead",
-  "title" : "Prohibit head and last on collections",
-  "description" : "Calling head or last should be avoided on collections.",
-  "timeToFix" : 5
-}, {
-  "patternId" : "Custom_Scala_ElseIf",
-  "title" : "Enforce pattern matching over else-if nesting",
-  "description" : "Pattern matching usually increases readability of the code.",
-  "timeToFix" : 5
-}, {
-  "patternId" : "Custom_Scala_EnforceMinimumVisibility",
-  "title" : "Enforce minimum visibility in module values",
-  "description" : "Values should have minimum scope to avoid misuses.",
-  "timeToFix" : 5
-}, {
-  "patternId" : "Custom_Scala_GetCalls",
-  "title" : "Prohibit get on Option and Either",
-  "description" : "Calling get should be avoided on Option and Either.",
-  "timeToFix" : 5
-}, {
-  "patternId" : "Custom_Scala_GetInMethodName",
-  "title" : "Prohibit prefixing getters with get",
-  "description" : "Active names should be given to methods.",
-  "timeToFix" : 5
-}, {
-  "patternId" : "Custom_Scala_PreferImmutableCollections",
-  "title" : "Enforce immutable collections",
-  "description" : "Prefer using immutable collections.",
-  "timeToFix" : 5
-}, {
-  "patternId" : "Custom_Scala_GroupImports",
-  "title" : "Enforce grouping imports",
-  "description" : "Use braces when importing several names from a package.",
-  "timeToFix" : 5
-}, {
-  "patternId" : "Custom_Scala_ImportsAtBeginningOfPackage",
-  "title" : "Enforce imports at the top of the package",
-  "description" : "Putting all imports at the beginning of the package can increase readability.",
-  "timeToFix" : 5
-}, {
-  "patternId" : "Custom_Scala_NameResultsAndParameters",
-  "title" : "Prohibit unnamed values on intermediate results and parameters",
-  "description" : "Parameters should be named to clarify its usage.",
-  "timeToFix" : 5
-}, {
-  "patternId" : "Custom_Scala_ProhibitObjectName",
-  "title" : "Prohibit method names that contain their object name",
-  "description" : "Method names should not repeat the name of their module.",
-  "timeToFix" : 5
-}, {
-  "patternId" : "Custom_Scala_PatternMatchingWhenDefaults",
-  "title" : "Enforce using defaults on conditional execution",
-  "description" : "Don't use pattern matching for conditional execution when defaults make more sense.",
-  "timeToFix" : 5
-}, {
-  "patternId" : "Custom_Scala_IncompletePatternMatching",
-  "title" : "Prohibit incomplete pattern matching",
-  "description" : "One should not do pattern matching without all the conditions",
-  "timeToFix" : 5
-}, {
-  "patternId" : "Custom_Scala_PatternMatchingInHigherOrderFunctions",
-  "title" : "Enforce using pattern matching directly in function definitions",
-  "description" : "Prefer pattern matching directly in function definitions.",
-  "timeToFix" : 5
-}, {
-  "patternId" : "Custom_Scala_ReservedKeywords",
-  "title" : "Avoid using reserved keywords",
-  "description" : "Don't use reserved scala keywords to name things.",
-  "parameters" : [ {
-    "name" : "exclude",
-    "description" : "Set of reserved keywords excluded from the search"
-  }],
-  "timeToFix" : 5
-}, {
-  "patternId" : "Custom_Scala_DefaultPatternMatching",
-  "title" : "Prohibit pattern matching without default case",
-  "description" : "One should not do pattern matching without default case",
-  "timeToFix" : 5
-}, {
-  "patternId" : "Custom_Scala_StructuralTypes",
-  "title" : "Avoid usage of Structural Types",
-  "description" : "Do not use structural types in normal use.",
-  "timeToFix" : 5
-}, {
-  "patternId" : "Custom_Scala_UsefulTypeAlias",
-  "title" : "Avoid self-explanatory type aliases",
-  "description" : "Prefer type aliases for complex types only.",
-  "timeToFix" : 5
-}, {
-  "patternId" : "Custom_Scala_UtilTryForTryCatch",
-  "title" : "Enforce usage of the Try object",
-  "description" : "Enforce usage of the util.Try object instead of try-catch blocks.",
-  "timeToFix" : 5
-}, {
-  "patternId" : "Custom_Scala_WildcardImportOnMany",
-  "title" : "Enforce Wildcard Imports",
-  "description" : "Use wildcards when more than six names are imported.",
-  "timeToFix" : 5
-}, {
-  "patternId" : "Custom_Scala_WithNameCalls",
-  "title" : "Prohibit withName on Enumeration",
-  "description" : "Calling withName should be avoided on Enumeration types.",
-  "timeToFix" : 5
-}, {
-  "patternId" : "Custom_Scala_NonFatal",
-  "title" : "Prohibit catching fatal exceptions",
-  "description" : "Fatal Exceptions shouldn't be caught.",
-  "timeToFix" : 5
-}, {
-  "patternId" : "Custom_Scala_ImportsSortedAlphabetically",
-  "title" : "Enforce sorting imports alphabetically",
-  "description" : "This makes it easy to examine visually, and is simple to automate.",
-  "timeToFix" : 5,
-  "parameters" : [ {
-    "name" : "caseSensitive",
-    "description" : "Most IDEs do respect case sensitivity when sorting imports."
-  } ]
-}, {
-  "patternId" : "Custom_Scala_ExplicitMutableNamespace",
-  "title" : "Enforce using the mutable namespace explicitly",
-  "description" : "Use the mutable namespace explicitly.",
-  "timeToFix" : 5
-}, {
-  "patternId" : "Custom_Scala_FieldNamesChecker",
-  "title" : "Enforce consistent field names",
-  "description" : "Enforce that field names match a regular expression",
-  "timeToFix" : 5,
-  "parameters" : [ {
-    "name" : "regex",
-    "description" : "Regular expression"
-  }, {
-    "name" : "includeEnums",
-    "description" : "Enforce naming convention for Enumeration Values"
-  } ]
-}, {
-  "patternId" : "Custom_Scala_IndexOfPositive",
-  "title" : "indexOf checks should be for negative numbers",
-  "description" : "Any checks which look for values > 0 ignore the first element, which is likely a bug.",
-  "timeToFix" : 5
-}, {
-  "patternId" : "Custom_Scala_IndexOfStartPosition",
-  "title" : "indexOf checks should use a start position",
-  "description" : "indexOf with start position argument is clearer because the result is tested against -1, which is an easily recognizable 'not found' indicator.",
-  "timeToFix" : 5
-}, {
-  "patternId" : "Custom_Scala_ExtendsError",
-  "title" : "java.lang.Error should not be extended",
-  "description" : "java.lang.Error and its subclasses represent abnormal conditions, such as OutOfMemoryError, which should only be encountered by the Java Virtual Machine.",
-  "timeToFix" : 5
-}, {
-  "patternId" : "Custom_Scala_TypeParameterName",
-  "title" : "Enforce type parameter names",
-  "description" : "Enforces type parameters naming convention",
-  "timeToFix" : 5,
-  "parameters" : [ {
-    "name" : "regex",
-    "description" : "Regular expression"
-  } ]
-}, {
-  "patternId" : "Custom_Scala_BadTagPresenceCheck",
-  "title" : "Prohibit todo/fixme tags in comments",
-  "description" : "FIXME tags are commonly used to mark places where a bug is suspected",
-  "timeToFix" : 5,
-  "parameters" : [ {
-    "name" : "fixmeTags",
-    "description" : "a set of strings to check the comments for"
-  }, {
-    "name" : "caseSensitive",
-    "description" : "should the search for tags respect case sensitivity"
-  } ]
-}, {
-  "patternId" : "Custom_Scala_UsingDateTimeNow",
-  "title" : "Avoid using DateTime.now without a timezone",
-  "description" : "Always prefer using DateTime.now with a specified timezone in order to avoid subtle bugs.",
-  "timeToFix" : 5
-}, {
-  "patternId" : "Custom_Scala_NotUsingNonEmpty",
-  "title" : "Prefer using .nonEmpty",
-  "description" : "Prefer using .nonEmpty instead of verifying that length is greater than 0 explicitly.",
-  "timeToFix" : 5
-}, {
-  "patternId" : "Custom_Scala_LowerCasePatternMatching",
-  "title" : "Prohibit lower case match case",
-  "description" : "Prohibit case statement pattern match from being lowercase.",
-  "timeToFix" : 5
-}, {
-  "patternId" : "Custom_Scala_UnusedPrivateVariables",
-  "title" : "Prohibit unused private variables",
-  "description" : "Don't define variables that you don't use, this can decrease the maintainability of the code.",
-  "timeToFix" : 5
-}, {
-  "patternId" : "Custom_Scala_IsDefined",
-  "title" : "Prohibit using isDefined on optional types",
-  "description" : "Calling isDefined should be avoided on Option and Either.",
-  "timeToFix" : 5
-}, {
-  "patternId" : "Custom_Scala_TypedEquality",
-  "title" : "Enforce typed equality comparison",
-  "description" : "Prohibits using the untyped operators == and !=.",
-  "timeToFix" : 5
-}, {
-  "patternId": "MultipleStringLiteralsChecker",
-  "title": "Prohibit duplicates string literals",
-  "description": "Prohibits usage of duplicated string literals.",
-  "timeToFix": 5
-}]
+[
+  {
+    "patternId": "Custom_Scala_ActiveNames",
+    "title": "Enforce Active Names",
+    "description": "Use active names for operations with side effects.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_DirectPromiseCreation",
+    "title": "Avoid Direct Promise Creation",
+    "description": "Always try to avoid creating Promise instances directly.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_ReturnFinally",
+    "title": "Avoid Control flow inside finally",
+    "description": "Avoid using return statement inside finally.",
+    "timeToFix": 30
+  },
+  {
+    "patternId": "Custom_Scala_CallByNameAsLastArguments",
+    "title": "Enforce call-by-name as last arguments",
+    "description": "Only use call-by-name arguments in the last position of the last argument list.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_JavaThreads",
+    "title": "Avoid creating Threads",
+    "description": "Implement concurrent behaviour by using Futures.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_CollectionLastHead",
+    "title": "Prohibit head and last on collections",
+    "description": "Calling head or last should be avoided on collections.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_ElseIf",
+    "title": "Enforce pattern matching over else-if nesting",
+    "description": "Pattern matching usually increases readability of the code.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_EnforceMinimumVisibility",
+    "title": "Enforce minimum visibility in module values",
+    "description": "Values should have minimum scope to avoid misuses.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_GetCalls",
+    "title": "Prohibit get on Option and Either",
+    "description": "Calling get should be avoided on Option and Either.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_GetInMethodName",
+    "title": "Prohibit prefixing getters with get",
+    "description": "Active names should be given to methods.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_PreferImmutableCollections",
+    "title": "Enforce immutable collections",
+    "description": "Prefer using immutable collections.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_GroupImports",
+    "title": "Enforce grouping imports",
+    "description": "Use braces when importing several names from a package.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_ImportsAtBeginningOfPackage",
+    "title": "Enforce imports at the top of the package",
+    "description": "Putting all imports at the beginning of the package can increase readability.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_NameResultsAndParameters",
+    "title": "Prohibit unnamed values on intermediate results and parameters",
+    "description": "Parameters should be named to clarify its usage.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_ProhibitObjectName",
+    "title": "Prohibit method names that contain their object name",
+    "description": "Method names should not repeat the name of their module.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_PatternMatchingWhenDefaults",
+    "title": "Enforce using defaults on conditional execution",
+    "description": "Don't use pattern matching for conditional execution when defaults make more sense.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_IncompletePatternMatching",
+    "title": "Prohibit incomplete pattern matching",
+    "description": "One should not do pattern matching without all the conditions",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_PatternMatchingInHigherOrderFunctions",
+    "title": "Enforce using pattern matching directly in function definitions",
+    "description": "Prefer pattern matching directly in function definitions.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_ReservedKeywords",
+    "title": "Avoid using reserved keywords",
+    "description": "Don't use reserved scala keywords to name things.",
+    "parameters": [
+      {
+        "name": "exclude",
+        "description": "Set of reserved keywords excluded from the search"
+      }
+    ],
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_DefaultPatternMatching",
+    "title": "Prohibit pattern matching without default case",
+    "description": "One should not do pattern matching without default case",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_StructuralTypes",
+    "title": "Avoid usage of Structural Types",
+    "description": "Do not use structural types in normal use.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_UsefulTypeAlias",
+    "title": "Avoid self-explanatory type aliases",
+    "description": "Prefer type aliases for complex types only.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_UtilTryForTryCatch",
+    "title": "Enforce usage of the Try object",
+    "description": "Enforce usage of the util.Try object instead of try-catch blocks.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_WildcardImportOnMany",
+    "title": "Enforce Wildcard Imports",
+    "description": "Use wildcards when more than six names are imported.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_WithNameCalls",
+    "title": "Prohibit withName on Enumeration",
+    "description": "Calling withName should be avoided on Enumeration types.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_NonFatal",
+    "title": "Prohibit catching fatal exceptions",
+    "description": "Fatal Exceptions shouldn't be caught.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_ImportsSortedAlphabetically",
+    "title": "Enforce sorting imports alphabetically",
+    "description": "This makes it easy to examine visually, and is simple to automate.",
+    "timeToFix": 5,
+    "parameters": [
+      {
+        "name": "caseSensitive",
+        "description": "Most IDEs do respect case sensitivity when sorting imports."
+      }
+    ]
+  },
+  {
+    "patternId": "Custom_Scala_ExplicitMutableNamespace",
+    "title": "Enforce using the mutable namespace explicitly",
+    "description": "Use the mutable namespace explicitly.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_FieldNamesChecker",
+    "title": "Enforce consistent field names",
+    "description": "Enforce that field names match a regular expression",
+    "timeToFix": 5,
+    "parameters": [
+      {
+        "name": "regex",
+        "description": "Regular expression"
+      },
+      {
+        "name": "includeEnums",
+        "description": "Enforce naming convention for Enumeration Values"
+      }
+    ]
+  },
+  {
+    "patternId": "Custom_Scala_IndexOfPositive",
+    "title": "indexOf checks should be for negative numbers",
+    "description": "Any checks which look for values > 0 ignore the first element, which is likely a bug.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_IndexOfStartPosition",
+    "title": "indexOf checks should use a start position",
+    "description": "indexOf with start position argument is clearer because the result is tested against -1, which is an easily recognizable 'not found' indicator.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_ExtendsError",
+    "title": "java.lang.Error should not be extended",
+    "description": "java.lang.Error and its subclasses represent abnormal conditions, such as OutOfMemoryError, which should only be encountered by the Java Virtual Machine.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_TypeParameterName",
+    "title": "Enforce type parameter names",
+    "description": "Enforces type parameters naming convention",
+    "timeToFix": 5,
+    "parameters": [
+      {
+        "name": "regex",
+        "description": "Regular expression"
+      }
+    ]
+  },
+  {
+    "patternId": "Custom_Scala_BadTagPresenceCheck",
+    "title": "Prohibit todo/fixme tags in comments",
+    "description": "FIXME tags are commonly used to mark places where a bug is suspected",
+    "timeToFix": 5,
+    "parameters": [
+      {
+        "name": "fixmeTags",
+        "description": "a set of strings to check the comments for"
+      },
+      {
+        "name": "caseSensitive",
+        "description": "should the search for tags respect case sensitivity"
+      }
+    ]
+  },
+  {
+    "patternId": "Custom_Scala_UsingDateTimeNow",
+    "title": "Avoid using DateTime.now without a timezone",
+    "description": "Always prefer using DateTime.now with a specified timezone in order to avoid subtle bugs.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_NotUsingNonEmpty",
+    "title": "Prefer using .nonEmpty",
+    "description": "Prefer using .nonEmpty instead of verifying that length is greater than 0 explicitly.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_LowerCasePatternMatching",
+    "title": "Prohibit lower case match case",
+    "description": "Prohibit case statement pattern match from being lowercase.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_UnusedPrivateVariables",
+    "title": "Prohibit unused private variables",
+    "description": "Don't define variables that you don't use, this can decrease the maintainability of the code.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_IsDefined",
+    "title": "Prohibit using isDefined on optional types",
+    "description": "Calling isDefined should be avoided on Option and Either.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_TypedEquality",
+    "title": "Enforce typed equality comparison",
+    "description": "Prohibits using the untyped operators == and !=.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "MultipleStringLiteralsChecker",
+    "title": "Prohibit duplicates string literals",
+    "description": "Prohibits usage of duplicated string literals.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_UselessComparison",
+    "title": "Prohibit useless comparisons",
+    "description": "Prohibits same expression to the left and right of an operator.",
+    "timeToFix": 5
+  }
+]
