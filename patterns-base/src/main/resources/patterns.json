@@ -209,6 +209,21 @@
       "patternId": "Custom_Scala_UselessComparison",
       "category": "ErrorProne",
       "level": "Error"
+    },
+    {
+      "patternId": "ObjectNamesChecker",
+      "level": "Info",
+      "category": "CodeStyle"
+    },
+    {
+      "patternId": "ClassNamesChecker",
+      "level": "Info",
+      "category": "CodeStyle"
+    },
+    {
+      "patternId": "MethodNamesChecker",
+      "level": "Info",
+      "category": "CodeStyle"
     }
   ]
 }

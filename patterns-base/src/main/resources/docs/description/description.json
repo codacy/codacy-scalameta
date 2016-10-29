@@ -288,5 +288,41 @@
     "title": "Prohibit useless comparisons",
     "description": "Prohibits same expression to the left and right of an operator.",
     "timeToFix": 5
+  },
+  {
+    "patternId": "ObjectNamesChecker",
+    "title": "Enforce object naming convention",
+    "description": "Enforces Scala object naming convention.",
+    "timeToFix": 5,
+    "parameters": [
+      {
+        "name": "regex",
+        "description": "The regex for name validation"
+      }
+    ]
+  },
+  {
+    "patternId": "ClassNamesChecker",
+    "title": "Enforce class naming convention",
+    "description": "Enforces Scala class naming convention.",
+    "timeToFix": 5,
+    "parameters": [
+      {
+        "name": "regex",
+        "description": "The regex for name validation"
+      }
+    ]
+  },
+  {
+    "patternId": "MethodNamesChecker",
+    "title": "Enforce method naming convention",
+    "description": "Enforces Scala method naming convention.",
+    "timeToFix": 5,
+    "parameters": [
+      {
+        "name": "regex",
+        "description": "The regex for name validation"
+      }
+    ]
   }
 ]
