@@ -9,13 +9,16 @@ case object Custom_Scala_ImportsAtBeginningOfPackage extends Pattern {
   override def apply(tree: Tree): Iterable[Result] = {
     tree.collect {
       case q"package $_ { ..$stats }" =>
-        stats.dropWhile(isImport).flatMap(
-          _.collect {
-            case t: Tree if isImportt(t) =>
-              Result(message(t), t)
+        filterPackages(stats).dropWhile(isImport).flatMap(
+          _.collect { case t: Tree if isNonLocalParamImport(t) =>
+            Result(message(t), t)
           }
         )
     }.flatten.to[Set]
+  }
+
+  private[this] def filterPackages(stats: Seq[Stat]): Seq[Stat] = {
+    stats.headOption.collect { case q"package $_ { ..$block }" => filterPackages(block) }.getOrElse(stats)
   }
 
   private[this] def importsLocalValue(term: Term.Name): Boolean = {
@@ -41,7 +44,7 @@ case object Custom_Scala_ImportsAtBeginningOfPackage extends Pattern {
     case _ => None
   }
 
-  private[this] def isImportt(tree: Tree): Boolean = tree match {
+  private[this] def isNonLocalParamImport(tree: Tree): Boolean = tree match {
     case importer"$ref.{..$_}" => !rootName(ref).exists(importsLocalValue)
     case _ => false
   }
