@@ -5,7 +5,7 @@ val scalaV = "2.11.8"
 val scalaLib      = "org.scala-lang" % "scala-library"  % scalaV
 val scalaReflect  = "org.scala-lang" % "scala-reflect"  % scalaV
 val scalaCompiler = "org.scala-lang" % "scala-compiler" % scalaV
-val scalameta     = "org.scalameta" %% "scalameta" % "1.4.0" withSources()
+val scalameta     = "org.scalameta" %% "scalameta" % "1.6.0" withSources()
 val commonsIO     = "commons-io" % "commons-io" % "2.4"
 val scalaXml      = "org.scala-lang.modules" %% "scala-xml" % "1.0.4"
 
