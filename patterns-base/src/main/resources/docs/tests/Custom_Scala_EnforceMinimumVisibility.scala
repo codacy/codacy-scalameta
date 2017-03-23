@@ -23,4 +23,15 @@ class Foo(foo: deactivatedTests.Foo) {
     }
   }
 
+  def accessor = Foo.bar
+
+  def otherAccessor = Foo.second
+
+}
+
+object Foo{
+
+  private def bar = ""
+
+  private val (first,second) = 44
 }
