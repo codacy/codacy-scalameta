@@ -4,39 +4,69 @@ import codacy.base.Pattern
 
 import scala.meta._
 
-case object Custom_Scala_EnforceMinimumVisibility extends Pattern{
+case object Custom_Scala_EnforceMinimumVisibility extends Pattern {
 
-
-  override def apply(tree: Tree) = {
-    tree.collect{
-      case t@q"..$mods val ..$patsnel: $tpeopt = $expr" if mods.exists(isPrivate) =>
-        Result(message(patsnel.toString),t)
-      case t@q"..$mods var ..$patsnel: $tpeopt = $expropt" if mods.exists(isPrivate) =>
-        Result(message(patsnel.toString),t)
-      case t@q"..$mods def $name[..$tparams](...$paramss): $tpeopt = $expr" if mods.exists(isPrivate) =>
-        Result(message(name.toString),t)
-      case t:Defn.Class if t.mods.exists(isPrivate) && isInner(t) =>
-        Result(message(t.name.toString),t)
-      case t@q"..$mods trait $tname[..$tparams] extends $template" if mods.exists(isPrivate) && isInner(t) =>
-        Result(message(tname.toString),t)
-      case t@q"..$mods object $name extends $template" if mods.exists(isPrivate) && isInner(t) =>
-        Result(message(name.toString),t)
-      case t@q"..$mods type $tname[..$tparams] = $tpe" if mods.exists(isPrivate) =>
-        Result(message(tname.toString),t)
-    }
+  override def apply(tree: Tree):Iterable[Result] = tree.collect {
+    case t: Defn if t.mods.exists(isPrivate) && isInner(t) && ! isAccessedInAccompanied(t) =>
+      Result(message(name(t)), t)
   }
 
-  private[this] def isInner(tree:Tree) = {
-    tree.parent.exists{
-      case q"package $ref { ..$stats }" => false
-      case _ => true
-    }
+  private[this] def isInner(tree: Defn) = tree match {
+    case t@(_: Defn.Trait | _: Defn.Class | _: Defn.Object) =>
+      t.parent.exists {
+        case q"package $_ { ..$_ }" => false
+        case _ => true
+      }
+    case _ => true
   }
 
-  private[this] def isPrivate(mod:Mod) = mod match{
+  private[this] def name(defn: Defn) = defn match {
+    case d: Member => d.name.syntax
+    case d: Defn.Val => d.pats.map(_.syntax).mkString(",")
+    case d: Defn.Var => d.pats.map(_.syntax).mkString(",")
+    case other => other.syntax
+  }
+
+  private[this] def isPrivate(mod: Mod) = mod match {
     case mod"private" => true
     case _ => false
   }
 
   private[this] def message(name: String) = Message(s"${name} should have a smaller scope by using private[this]")
+
+  //poor man's approach ...
+  private[this] def isAccessedInAccompanied(defn: Defn) = {
+    Option(defn).collect {
+      case d: Defn.Def => Set(d.name)
+      case d:Defn.Val => d.collect{ case n:Name => n }.to[Set]
+      case d:Defn.Var => d.collect{ case n:Name => n }.to[Set]
+    }.exists( defNames =>
+      defn.parent.flatMap(_.parent).exists {
+        case companion: Defn.Object =>
+          lazy val rawNames = defNames.map(_.syntax)
+          companion.parent.map(_.children).getOrElse(Seq.empty).exists {
+            case accompanied: Defn.Class if companion.name.syntax == accompanied.name.syntax =>
+              accompanied.templ.collect {
+                case q"$expr.$name" if expr.syntax == companion.name.syntax && rawNames.contains(name.syntax) => true
+              }.exists(identity)
+            case _ => false
+          }
+        case _ => false
+      }
+    )
+  }
+
+  private[this] implicit class DefExtensions(val defn:Defn){
+    def mods: Seq[Mod] = defn match {
+      case d:Defn.Class => d.mods
+      case d:Defn.Def => d.mods
+      case d:Defn.Trait => d.mods
+      case d:Defn.Object => d.mods
+      case d:Defn.Type => d.mods
+      case d:Defn.Val => d.mods
+      case d:Defn.Var => d.mods
+      case d:Defn.Macro => d.mods
+      case _ => Seq.empty
+    }
+  }
 }
