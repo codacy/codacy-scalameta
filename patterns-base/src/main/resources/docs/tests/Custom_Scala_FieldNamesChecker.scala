@@ -3,6 +3,13 @@ package docs.tests
 
 trait Foo[A]{
 
+    object Obj {
+      // should not detect constant
+      val Const = "asdf"
+      //#Info: Custom_Scala_FieldNamesChecker
+      var Foo = 42
+    }
+
     //false positives detected by scalastyle:
     val (t1,t2,t3) = ("",0,"")
     //enum styles
