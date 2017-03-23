@@ -16,7 +16,7 @@ class Custom_Scala_FieldNamesChecker(configuration: Custom_Scala_FieldNamesCheck
         conflictingNames(patsnel, isConstant(t))
       //val declarations
       case t@q"..$_ val ..$pnamesnel: $tpe" if configuration.includeEnums || ! isEnumValDefRegexOrDecl(t.parent,tpe=Option(tpe)) =>
-        conflictingNames(pnamesnel, isConstant(t))
+        conflictingNames(pnamesnel)
       //var definitions
       case t@q"..$_ var ..$patsnel: $tpe = $expr" if configuration.includeEnums || ! isEnumValDefRegexOrDecl(t.parent,expr,tpe) =>
         conflictingNames(patsnel)
