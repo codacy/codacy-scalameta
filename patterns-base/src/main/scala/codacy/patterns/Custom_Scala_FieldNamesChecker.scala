@@ -1,6 +1,6 @@
 package codacy.patterns
 
-import codacy.base.{Pattern, Result}
+import codacy.base.Pattern
 
 import scala.meta._
 import scala.util.matching.Regex
@@ -13,7 +13,7 @@ class Custom_Scala_FieldNamesChecker(configuration: Custom_Scala_FieldNamesCheck
     tree.collect{
       //val definitions
       case t@q"..$_ val ..$patsnel: $tpe = $expr" if configuration.includeEnums || ! isEnumValDefRegexOrDecl(t.parent,Option(expr),tpe) =>
-        conflictingNames(patsnel)
+        conflictingNames(patsnel, isConstant(t))
       //val declarations
       case t@q"..$_ val ..$pnamesnel: $tpe" if configuration.includeEnums || ! isEnumValDefRegexOrDecl(t.parent,tpe=Option(tpe)) =>
         conflictingNames(pnamesnel)
@@ -56,13 +56,22 @@ class Custom_Scala_FieldNamesChecker(configuration: Custom_Scala_FieldNamesCheck
     exprIsRegex || (extendsEnumeration && (exprIsValue || tpeIsValue))
   }
 
+  private[this] def isConstant(tree: Tree): Boolean = {
+    lazy val isConstant = tree.parent.flatMap(_.parent).collect {
+      case q"..$_ object $_ extends $_" => true
+      case q"package object $_ extends $_" => true
+    }.getOrElse(false)
 
-  private[this] def conflictingNames(trees:Seq[Tree]) = {
-    trees.collect{
+    configuration.allowConstants && isConstant
+  }
+
+
+  private[this] def conflictingNames(trees: Seq[Tree], isConstant: Boolean = false) = {
+    trees.collect {
       //tuples
       case p"(..$exprsnel)" =>
-        exprsnel.filter( isConflictingName )
-      case single if isConflictingName(single) =>
+        exprsnel.filter(isConflictingName(_, isConstant))
+      case single if isConflictingName(single, isConstant) =>
         List(single)
     }.flatten
   }
@@ -72,18 +81,23 @@ class Custom_Scala_FieldNamesChecker(configuration: Custom_Scala_FieldNamesCheck
       exists{ case value => value.startsWith("`") && value.endsWith("`")}
   }
 
-  private[this] def isConflictingName(tree:Tree):Boolean = {
+  private[this] def isConflictingName(tree: Tree, isConstant: Boolean = false): Boolean = {
     Option(tree).collect{
       case q"${term: Pat.Var.Term}" if ! isEscaped(term.name) =>
         term.name.value
       case q"${name: Term.Name}" if ! isEscaped(name) =>
         name.value
-    }.exists( name => ! configuration.regex.pattern.matcher(name).matches() )
+    }.exists {
+      case name if isConstant => !configuration.constantsRegex.pattern.matcher(name).matches()
+      case name => !configuration.regex.pattern.matcher(name).matches()
+    }
   }
 
   private[this] def message(tree:Tree) = Message(s"Field name '$tree' does not match the regular expression '${configuration.regex}'")
 }
 
 object Custom_Scala_FieldNamesChecker{
-  case class Configuration(regex:Regex="""^[a-z][A-Za-z0-9]*$""".r, includeEnums:Boolean=false)
+  case class Configuration(regex:Regex="""^[a-z][A-Za-z0-9]*$""".r, includeEnums:Boolean=false,
+                           allowConstants: Boolean = true, constantsRegex: Regex = """^[A-Za-z][A-Za-z0-9]*$""".r)
+
 }

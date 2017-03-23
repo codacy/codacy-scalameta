@@ -192,6 +192,14 @@
       {
         "name": "includeEnums",
         "description": "Enforce naming convention for Enumeration Values"
+      },
+      {
+        "name": "allowConstants",
+        "description": "Use a different regular expression for object constants"
+      },
+      {
+        "name": "constantsRegex",
+        "description": "Regular expression to use in object constants (if allowConstants is set to true)"
       }
     ]
   },
