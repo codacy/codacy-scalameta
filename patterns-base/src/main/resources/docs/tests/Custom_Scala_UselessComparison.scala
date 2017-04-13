@@ -24,4 +24,7 @@ object Foo {
   //Err: Custom_Scala_UselessComparison
   Bar(3) == Bar(3)
 
+  //false positive:
+  1024 * 1024
+
 }
