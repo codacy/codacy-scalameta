@@ -7,7 +7,7 @@ import scala.meta._
 case object MultipleStringLiteralsChecker extends Pattern{
 
   override def apply(tree: Tree): Iterable[Result] = {
-    tree.collect{ case lit@Lit(value:String) => tupled(lit,value) }.
+    tree.collect{ case lit@Lit(value:String) if value.nonEmpty => tupled(lit,value) }.
       groupBy{ case (l,_) => l }.
       mapValues{ _.map{ case (_,tree) => tree }.distinct }.
       collect{ case (strings, tree :: others) if others.nonEmpty =>

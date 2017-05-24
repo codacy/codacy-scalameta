@@ -43,4 +43,8 @@ class MultipleStringLiteralsChecker {
   val existingCommits = SystemInstruments.time(s"Getting existingCommits for project ${branch.projectId} branch ${branch.identifier}") {
     ???
   }
+
+  //don't detect empty
+  val empty1 = ""
+  val empty2 = ""
 }
