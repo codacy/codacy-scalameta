@@ -90,8 +90,18 @@ resourceGenerators in Compile += Def.task {
   newFiles.toList
 }.taskValue
 
-mappings in Universal <++= (resourceManaged, managedResources in Compile) map { (base:File, files:Seq[File]) =>
-  files pair Path.rebase (base / "main", "")
+mappings in Universal <++= (resourceDirectory in Compile, resourceManaged, managedResources in Compile) map {
+  (resourceDir: File, base:File, files:Seq[File]) =>
+    val src = resourceDir / "docs"
+    val dest = "/docs"
+
+    val staticResources = for {
+      path <- src.***.get
+      if !path.isDirectory
+    } yield path -> path.toString.replaceFirst(src.toString, dest)
+
+    staticResources ++
+      (files pair Path.rebase (base / "main", ""))
 }
 
 val dockerUser = "docker"
