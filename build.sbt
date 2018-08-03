@@ -83,41 +83,42 @@ resourceGenerators in Compile += Def.task {
   )
 
   //this ensures that compilation fails on erroneous resources!
-  result.foreach( r => throw new Exception(s"resource generation failed $r"))
+  result.failed.foreach( r => throw new Exception(s"resource generation failed $r"))
 
   val newFiles = allFiles(file) -- curFiles
 
   newFiles.toList
 }.taskValue
 
-mappings in Universal <++= (resourceDirectory in Compile, resourceManaged, managedResources in Compile) map {
-  (resourceDir: File, base:File, files:Seq[File]) =>
-    val src = resourceDir / "docs"
-    val dest = "/docs"
+mappings in Universal ++= {
+  val src = (resourceDirectory in Compile).value / "docs"
+  val base = resourceManaged.value / "main"
+  val dest = "/docs"
 
-    val staticResources = for {
-      path <- src.***.get
-      if !path.isDirectory
-    } yield path -> path.toString.replaceFirst(src.toString, dest)
+  val staticResources = for {
+    path <- src.allPaths.get ++ base.allPaths.get if !path.isDirectory
+  } yield path -> path.toString.replaceFirst(src.toString, dest)
 
-    staticResources ++
-      (files pair Path.rebase (base / "main", ""))
+  val generatedResources = for {
+    path <- base.allPaths.get if !path.isDirectory
+  } yield path -> path.toString.replaceFirst((base / "docs").toString, dest)
+
+  staticResources ++ generatedResources
 }
 
 val dockerUser = "docker"
 
 daemonUser in Docker := dockerUser
 
-dockerBaseImage := "frolvlad/alpine-oraclejdk8:cleaned"
+dockerBaseImage := "openjdk:8-jre-alpine"
 
 dockerCommands := dockerCommands.value.flatMap{
-  case cmd@Cmd("WORKDIR","/opt/docker") => List(cmd,
-    Cmd("USER","root"),
+  case cmd@Cmd("WORKDIR", _) => List(cmd,
     Cmd("RUN","apk update && apk add bash")
   )
-  case cmd@Cmd("ADD","opt /opt") => List(
-    cmd,
+  case cmd@Cmd("ADD",_) => List(
     Cmd("RUN", s"adduser -u 2004 -D $dockerUser"),
+    cmd,
     Cmd("RUN", "mv /opt/docker/docs /docs")
   )
   case other => List(other)

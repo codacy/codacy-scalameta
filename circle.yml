@@ -1,40 +1,55 @@
-machine:
-  pre:
-    - wget -q https://dl.bintray.com/sbt/debian/sbt-0.13.13.deb
-    - sudo dpkg -i sbt-0.13.13.deb
-    - echo 'DOCKER_OPTS="-s btrfs -e lxc -D --userland-proxy=false"' | sudo tee -a /etc/default/docker
-    - sudo curl -L -o /usr/bin/docker 'https://s3-external-1.amazonaws.com/circle-downloads/docker-1.9.0-circleci-cp-workaround'
-    - sudo chmod 0755 /usr/bin/docker
-  java:
-    version: oraclejdk8
-  services:
-    - docker
+version: 2
+jobs:
+  build:
+    machine: true
+    working_directory: ~/workdir
+    steps:
+      - checkout
+      - run:
+          name: Clone test project
+          working_directory: ~/
+          command: |
+            (git -C ~/codacy-plugins-test fetch --all &&
+              git -C ~/codacy-plugins-test reset --hard origin/master) ||
+                git clone git://github.com/codacy/codacy-plugins-test.git ~/codacy-plugins-test
+      - restore_cache:
+          key: dependencies-{{ checksum "build.sbt" }}
+      - run:
+          name: Compile test project
+          working_directory: ~/codacy-plugins-test
+          command: sbt compile
+      - run:
+          name: Publish tool docker locally
+          working_directory: ~/workdir
+          command: sbt 'set version in Docker := "latest"' "set name := \"$CIRCLE_PROJECT_REPONAME\"" docker:publishLocal
+      - save_cache:
+          key: dependencies-{{ checksum "build.sbt" }}
+          paths:
+            - "~/.ivy2"
+            - "~/.m2"
+            - "~/.sbt"
+            - "~/codacy-plugins-test/target"
+            - "~/codacy-plugins-test/project/target"
+            - "~/codacy-plugins-test/project/project"
+            - "~/workdir/target"
+            - "~/workdir/project/target"
+            - "~/workdir/project/project"
+      - run:
+          name: Test
+          working_directory: ~/codacy-plugins-test
+          command: sbt -Dcodacy.tests.ignore.descriptions=true "run-main codacy.plugins.DockerTest all $CIRCLE_PROJECT_REPONAME:latest"
+      - deploy:
+          name: Push application Docker image
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker tag $CIRCLE_PROJECT_REPONAME codacy/$CIRCLE_PROJECT_REPONAME
+              docker tag $CIRCLE_PROJECT_REPONAME codacy/$CIRCLE_PROJECT_REPONAME:1.0.$CIRCLE_BUILD_NUM
+              docker push codacy/$CIRCLE_PROJECT_REPONAME
+            fi
 
-dependencies:
-  override:
-    - sbt "set version in Docker := \"latest\"" "set name := \"$CIRCLE_PROJECT_REPONAME\"" docker:publishLocal
-  cache_directories:
-    - "~/.ivy2"
-    - "~/.m2"
-    - "~/.sbt"
-    - "~/codacy-plugins-test/target"
-    - "~/codacy-plugins-test/project/target"
-    - "~/codacy-plugins-test/project/project"
-    - "~/$CIRCLE_PROJECT_REPONAME/target"
-    - "~/$CIRCLE_PROJECT_REPONAME/project/target"
-    - "~/$CIRCLE_PROJECT_REPONAME/project/project"
-
-test:
-  pre:
-    - git clone https://github.com/codacy/codacy-plugins-test.git
-  override:
-    - (cd codacy-plugins-test; sbt "run-main codacy.plugins.DockerTest all $CIRCLE_PROJECT_REPONAME:latest")
-
-deployment:
-  hub:
-    branch: master
-    commands:
-      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-      - docker tag $CIRCLE_PROJECT_REPONAME codacy/$CIRCLE_PROJECT_REPONAME
-      - docker tag $CIRCLE_PROJECT_REPONAME codacy/$CIRCLE_PROJECT_REPONAME:1.0.$CIRCLE_BUILD_NUM
-      - docker push codacy/$CIRCLE_PROJECT_REPONAME
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build

@@ -1,9 +1,11 @@
 package codacy
 
-import java.nio.file.{Files, Path}
+import java.nio.file.{Files, Path, Paths}
 
 import codacy.base.PatternCompanion
-import codacy.dockerApi._
+import com.codacy.plugins.api.{Source=>ToolSource,_}
+import com.codacy.plugins.api.results._
+import com.codacy.tools.scala.seed.DockerEnvironment
 import codacy.macros.Patterns
 import play.api.libs.json.{JsError, JsSuccess, Reads}
 
@@ -23,27 +25,30 @@ object CodacyScalameta extends Tool {
     }
   )
 
-  val newPatterns: Map[PatternId, PatternCompanion] = Patterns.fromResources
+  val newPatterns: Map[Pattern.Id, PatternCompanion] = Patterns.fromResources
 
-  override def apply(path: Path, conf: Option[List[PatternDef]], files: Option[Set[Path]])(implicit spec: Spec): Try[List[Result]] = {
-    val allFiles = {
+  override def apply(source: ToolSource.Directory,
+                     configuration: Option[List[Pattern.Definition]],
+                     files: Option[Set[ToolSource.File]],
+                     options: Map[Options.Key, Options.Value])(implicit specification: Tool.Specification): Try[List[Result]] = {
+    val allFiles: List[Path] = {
       import scala.collection.JavaConversions._
-      files.map(_.toList).getOrElse(Files.walk(path).iterator().toList)
+      files.map(_.toList.map(p => Paths.get(p.path))).getOrElse(Files.walk(Paths.get(source.path)).iterator().toList)
     }
 
-    val fNewPatterns: List[(PatternId, codacy.base.Pattern)] = {
+    val fNewPatterns: List[(Pattern.Id, codacy.base.Pattern)] = {
       lazy val default = newPatterns.toList.map { case (pid, patternFactory) =>
         val pat: codacy.base.Pattern = patternFactory.fromConfiguration(patternFactory.defaultConfig)
         (pid, pat)
       }
 
-      conf match {
+      configuration match {
         case Some(defs) =>
-          defs.flatMap { case pDef: PatternDef =>
-            val params: Set[ParameterDef] = pDef.parameters.getOrElse {
-              spec.patterns.filter(_.patternId == pDef.patternId).
+          defs.flatMap { case pDef: Pattern.Definition =>
+            val params: Set[Parameter.Definition] = pDef.parameters.getOrElse {
+              specification.patterns.filter(_.patternId == pDef.patternId).
                 flatMap(_.parameters.toList.map(_.map { case spec =>
-                  ParameterDef(spec.name, spec.default)
+                  Parameter.Definition(spec.name, spec.default)
                 }).flatten)
             }
 
@@ -59,7 +64,7 @@ object CodacyScalameta extends Tool {
 
     val allResults = allFiles.flatMap {
       case path if isScala(path) =>
-        lazy val sourcePath = SourcePath(DockerEnvironment.sourcePath.relativize(path).toString)
+        lazy val sourcePath = ToolSource.File(new DockerEnvironment().defaultRootFile.relativize(path).toString)
 
         Try(path.toFile().parse[Source]) match {
           case Success(Parsed.Success(tree)) =>
@@ -68,18 +73,18 @@ object CodacyScalameta extends Tool {
               Try(pat.apply(tree)) match {
                 case util.Success(resList) =>
                   resList.map { case res =>
-                    Issue(sourcePath, ResultMessage(res.message.value), patternId, ResultLine(res.position.start.line + 1))
+                    Result.Issue(sourcePath, Result.Message(res.message.value), patternId, ToolSource.Line(res.position.start.line + 1))
                   }.toSeq.distinct
                 case util.Failure(err) =>
-                  List(FileError(sourcePath, Option(ErrorMessage(err.getMessage))))
+                  List(Result.FileError(sourcePath, Option(ErrorMessage(err.getMessage))))
               }
             }
 
           case Success(Parsed.Error(position, message, details)) =>
-            List(FileError(sourcePath, Option(ErrorMessage(message))))
+            List(Result.FileError(sourcePath, Option(ErrorMessage(message))))
 
           case Failure(error) =>
-            List(FileError(sourcePath, Option(ErrorMessage(error.getMessage))))
+            List(Result.FileError(sourcePath, Option(ErrorMessage(error.getMessage))))
         }
 
       case _ => List.empty

@@ -1,13 +1,13 @@
+import Dependencies._
+
 name := """codacy-patterns-core"""
 
-val scalaV = "2.11.8"
 //core dependencies
 val scalaLib      = "org.scala-lang" % "scala-library"  % scalaV
-val scalaReflect  = "org.scala-lang" % "scala-reflect"  % scalaV
 val scalaCompiler = "org.scala-lang" % "scala-compiler" % scalaV
 val scalameta     = "org.scalameta" %% "scalameta" % "1.6.0" withSources()
-val commonsIO     = "commons-io" % "commons-io" % "2.4"
-val scalaXml      = "org.scala-lang.modules" %% "scala-xml" % "1.0.4"
+val commonsIO     = "commons-io" % "commons-io" % "2.6"
+val scalaXml      = "org.scala-lang.modules" %% "scala-xml" % "1.1.0"
 
 version := "0.2.0"
 

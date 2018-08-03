@@ -5,7 +5,7 @@ import play.api.libs.json.JsObject
 
 import scala.reflect.macros.whitebox._
 
-object Pattern{
+object PatternMacros{
   import scala.language.experimental.macros
 
   def companion(id:String):PatternCompanion = macro codacy.macros.PatternCompanionMacro.impl
