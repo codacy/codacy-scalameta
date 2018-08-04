@@ -1,6 +1,6 @@
 package codacy.patterns
 
-import codacy.base.{Pattern, Result}
+import codacy.base.Pattern
 
 import scala.meta._
 import scala.util.matching.Regex
@@ -16,8 +16,8 @@ class Custom_Scala_TypeParameterName(conf:Custom_Scala_TypeParameterName.Configu
     }
   }
 
-  private[this] def isOffender(tparam: Type.Param.Name): Boolean = {
-    !conf.regex.pattern.matcher(tparam.toString()).matches()
+  private[this] def isOffender(name: Name): Boolean = {
+    !conf.regex.pattern.matcher(name.value).matches()
   }
 
   private[this] def message(tree: Tree) = Message(s"Type parameter '$tree' does not conform with naming standard.")

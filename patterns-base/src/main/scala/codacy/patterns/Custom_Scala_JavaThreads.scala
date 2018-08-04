@@ -6,11 +6,11 @@ import scala.meta._
 
 case object Custom_Scala_JavaThreads extends Pattern{
 
-  override def apply(tree: Tree) = {
+  override def apply(tree: Tree): List[Result] = {
     tree.collect{
-      case q"new { ..$stat } with ..$ctorcalls { $param => ..$stats }" if ctorcalls.length == 1 =>
-        ctorcalls.headOption.collect{
-          case t@ctor"$ctorref(..$aexprssnel)" if ctorref.toString == "Thread" =>
+      case q"new $init" =>
+        Option(init).collect{
+          case t@init"$tpe(...$exprss)" if tpe.toString == "Thread" =>
             Result(message(t),t)
         }
 

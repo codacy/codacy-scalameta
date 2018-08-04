@@ -1,12 +1,12 @@
 package codacy.patterns
 
-import codacy.base.{Pattern, Result}
+import codacy.base.Pattern
 
 import scala.meta._
 
 case object Custom_Scala_DefaultPatternMatching extends Pattern{
 
-  override def apply(tree: Tree) = {
+  override def apply(tree: Tree): List[Result] = {
     val allCases: Seq[Tree] = tree.collect{
       case t@p"case $pat if $guard => $expr" if isOffender(t) =>
         t
@@ -25,9 +25,10 @@ case object Custom_Scala_DefaultPatternMatching extends Pattern{
     // Collect all the types from the cases and see if we have usages of Left/Right
     // and Success/Failure paired together.
     val types = tree.parent.map {
-      case tree => tree.collect {
+      _.collect {
         case p"$pat: $tpe" => tpe.toString
         case p"${name: Term.Name}" => name.toString
+        case p"$expr(..$pats)" => expr.toString
       }.toSet
     }
     types.fold(false) {
@@ -65,19 +66,19 @@ case object Custom_Scala_DefaultPatternMatching extends Pattern{
   }
 
   private[this] def hasDefaultCase(cases:Seq[Tree]) = {
-    cases.exists( _ match{
+    cases.exists {
       case t@p"case $pat if $guard => $_" if guard.isEmpty =>
         //check the pattern
         pat match{
           //Extract
-          case t@p"$ref[..$tpes](..$apats)" => false
+          case p"$expr(..$pats)" => false
           //Typed
           case p"$pat: $ptpe" => false
           case _ => true
         }
 
       case _ => false
-    })
+    }
 
   }
 

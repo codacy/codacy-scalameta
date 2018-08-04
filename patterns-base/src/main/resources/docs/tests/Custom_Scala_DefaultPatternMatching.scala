@@ -6,7 +6,13 @@ case class ClassEx(a: Int, b: Int) extends Exception
 class NoDefaultPatternMatching {
 
   val something = new Exception
-  val someSeq = Seq(1,2,3,4,5)
+  val someSeq = Seq(
+    1,
+    2,
+    3,
+    4,
+    5,
+  )
 
   //OK
   something match {

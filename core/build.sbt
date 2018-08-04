@@ -5,7 +5,7 @@ name := """codacy-patterns-core"""
 //core dependencies
 val scalaLib      = "org.scala-lang" % "scala-library"  % scalaV
 val scalaCompiler = "org.scala-lang" % "scala-compiler" % scalaV
-val scalameta     = "org.scalameta" %% "scalameta" % "1.6.0" withSources()
+val scalameta     = "org.scalameta" %% "scalameta" % "4.0.0-M7" withSources()
 val commonsIO     = "commons-io" % "commons-io" % "2.6"
 val scalaXml      = "org.scala-lang.modules" %% "scala-xml" % "1.1.0"
 

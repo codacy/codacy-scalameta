@@ -17,7 +17,7 @@ import scala.util.{Failure, Success, Try}
 object CodacyScalameta extends Tool {
 
   implicit val regexReader: Reads[Regex] = Reads(
-    _.validate[String].flatMap { case raw =>
+    _.validate[String].flatMap { raw =>
       Try(raw.r) match {
         case util.Success(regex) => JsSuccess(regex)
         case util.Failure(ex) => JsError(ex.getMessage)
@@ -44,15 +44,15 @@ object CodacyScalameta extends Tool {
 
       configuration match {
         case Some(defs) =>
-          defs.flatMap { case pDef: Pattern.Definition =>
+          defs.flatMap { pDef: Pattern.Definition =>
             val params: Set[Parameter.Definition] = pDef.parameters.getOrElse {
               specification.patterns.filter(_.patternId == pDef.patternId).
-                flatMap(_.parameters.toList.map(_.map { case spec =>
+                flatMap(_.parameters.toList.flatMap(_.map { spec =>
                   Parameter.Definition(spec.name, spec.default)
-                }).flatten)
+                }))
             }
 
-            newPatterns.get(pDef.patternId).map { case patternFactory =>
+            newPatterns.get(pDef.patternId).map { patternFactory =>
               patternFactory.fromParameters(params)
             }.collect { case Success(pat: codacy.base.Pattern) =>
               (pDef.patternId, pat)
@@ -66,14 +66,14 @@ object CodacyScalameta extends Tool {
       case path if isScala(path) =>
         lazy val sourcePath = ToolSource.File(new DockerEnvironment().defaultRootFile.relativize(path).toString)
 
-        Try(path.toFile().parse[Source]) match {
+        Try(path.toFile.parse[Source]) match {
           case Success(Parsed.Success(tree)) =>
 
             fNewPatterns.flatMap { case (patternId, pat) =>
               Try(pat.apply(tree)) match {
                 case util.Success(resList) =>
-                  resList.map { case res =>
-                    Result.Issue(sourcePath, Result.Message(res.message.value), patternId, ToolSource.Line(res.position.start.line + 1))
+                  resList.map { res =>
+                    Result.Issue(sourcePath, Result.Message(res.message.value), patternId, ToolSource.Line(res.position.startLine + 1))
                   }.toSeq.distinct
                 case util.Failure(err) =>
                   List(Result.FileError(sourcePath, Option(ErrorMessage(err.getMessage))))
@@ -96,6 +96,6 @@ object CodacyScalameta extends Tool {
   def isScala(path: Path): Boolean = {
     Files.isRegularFile(path) &&
       //pity that  Files.probeContentType(path) returns null;
-      path.getFileName.toString.split('.').lastOption.exists(_ == "scala")
+      path.getFileName.toString.split('.').lastOption.contains("scala")
   }
 }
