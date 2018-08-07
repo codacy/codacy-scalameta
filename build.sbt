@@ -49,7 +49,6 @@ lazy val common = project.in(file("common"))
   .settings(scalaVersion := scalaV)
   .settings( libraryDependencies ++= Seq(
     Dependencies.codacyEngine,
-    Dependencies.playJson,
     Dependencies.betterFiles
   ))
 
@@ -58,7 +57,7 @@ lazy val macros = project.in(file("macros")).
   settings(libraryDependencies += Def.setting(scalaReflect).value).
   dependsOn(common)
 
-enablePlugins(JavaAppPackaging)
+enablePlugins(AshScriptPlugin)
 
 enablePlugins(DockerPlugin)
 
@@ -93,17 +92,15 @@ resourceGenerators in Compile += Def.task {
 mappings in Universal ++= {
   val src = (resourceDirectory in Compile).value / "docs"
   val base = resourceManaged.value / "main"
+  val files = (managedResourceDirectories in Compile).value.allPaths.get
   val dest = "/docs"
 
   val staticResources = for {
-    path <- src.allPaths.get ++ base.allPaths.get if !path.isDirectory
+    path <- src.allPaths.get if !path.isDirectory
   } yield path -> path.toString.replaceFirst(src.toString, dest)
 
-  val generatedResources = for {
-    path <- base.allPaths.get if !path.isDirectory
-  } yield path -> path.toString.replaceFirst((base / "docs").toString, dest)
-
-  staticResources ++ generatedResources
+  staticResources ++
+    (files pair Path.rebase (base, ""))
 }
 
 val dockerUser = "docker"
@@ -113,9 +110,6 @@ daemonUser in Docker := dockerUser
 dockerBaseImage := "openjdk:8-jre-alpine"
 
 dockerCommands := dockerCommands.value.flatMap{
-  case cmd@Cmd("WORKDIR", _) => List(cmd,
-    Cmd("RUN","apk update && apk add bash")
-  )
   case cmd@Cmd("ADD",_) => List(
     Cmd("RUN", s"adduser -u 2004 -D $dockerUser"),
     cmd,

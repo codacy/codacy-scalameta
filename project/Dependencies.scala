@@ -3,7 +3,6 @@ import sbt._
 object Dependencies {
   val scalaV = "2.12.6"
 
-  val playJson      = "com.typesafe.play" %% "play-json" % "2.6.7"
   val betterFiles   = "com.github.pathikrit" %% "better-files" % "3.6.0"
   val codacyEngine  = "com.codacy" %% "codacy-engine-scala-seed" % "3.0.168"
   val scalaReflect  = "org.scala-lang" % "scala-reflect"  % scalaV
