@@ -37,7 +37,7 @@ jobs:
       - run:
           name: Test
           working_directory: ~/codacy-plugins-test
-          command: sbt -Dcodacy.tests.ignore.descriptions=true "run-main codacy.plugins.DockerTest all $CIRCLE_PROJECT_REPONAME:latest"
+          command: sbt -Dcodacy.tests.ignore.descriptions=true "runMain codacy.plugins.DockerTest all $CIRCLE_PROJECT_REPONAME:latest"
       - deploy:
           name: Push application Docker image
           command: |
