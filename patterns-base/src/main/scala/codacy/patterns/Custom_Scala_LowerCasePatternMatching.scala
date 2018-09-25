@@ -8,7 +8,7 @@ case object Custom_Scala_LowerCasePatternMatching extends Pattern{
 
   override def apply(tree: Tree) = {
     tree.collect {
-      case t@p"case ${pat: Pat.Var.Term} => $expr" if isOffender(t, pat) =>
+      case t@p"case ${pat: Pat.Var} => $expr" if isOffender(t, pat) =>
         Result(message(t),t)
     }    
   }
@@ -44,8 +44,8 @@ case object Custom_Scala_LowerCasePatternMatching extends Pattern{
 
   private[this] def isLowerCase(pat: Pat) = {
     pat match{
-      case q"${name: Pat.Var.Term }" =>
-        name.toString.headOption.exists(Character.isLowerCase(_))
+      case q"${name: Pat.Var }" =>
+        name.name.value.headOption.exists(Character.isLowerCase)
       case _ =>
         false
     }

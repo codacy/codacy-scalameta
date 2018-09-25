@@ -26,13 +26,13 @@ class Custom_Scala_FieldNamesChecker(configuration: Custom_Scala_FieldNamesCheck
       //parameter values
       case t@param"..$mods $paramname: $atpeopt = $expropt" if isConflictingName(paramname) =>
         List(paramname)
-    }.flatten.map{ case tree => Result(message(tree),tree) }.toSet
+    }.flatten.map{ tree => Result(message(tree),tree) }.toSet
   }
 
-  private[this] def isEnumValDefRegexOrDecl(parent:Option[Tree],expr:Option[Tree]=None,tpe:Option[Tree]=None) = {
-    val extendsEnumeration:Boolean = parent.collect{ case template"{ ..$stats } with ..${ctorcalls:Seq[Ctor.Call]} { $param => ..$stats2 }" =>
+  private[this] def isEnumValDefRegexOrDecl(parent:Option[Tree],expr:Option[Tree]=None,tpe:Option[Type]) = {
+    val extendsEnumeration:Boolean = parent.collect{ case template"{ ..$stats } with ..${ctorcalls:Seq[Init]} { $param => ..$stats2 }" =>
       ctorcalls.exists{
-        case ctor"Enumeration" => true
+        case init"Enumeration" => true
         case _ => false
       }
     }.getOrElse(false)
@@ -83,7 +83,7 @@ class Custom_Scala_FieldNamesChecker(configuration: Custom_Scala_FieldNamesCheck
 
   private[this] def isConflictingName(tree: Tree, isConstant: Boolean = false): Boolean = {
     Option(tree).collect{
-      case q"${term: Pat.Var.Term}" if ! isEscaped(term.name) =>
+      case q"${term: Pat.Var}" if ! isEscaped(term.name) =>
         term.name.value
       case q"${name: Term.Name}" if ! isEscaped(name) =>
         name.value

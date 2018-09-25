@@ -9,12 +9,12 @@ case object Custom_Scala_GroupImports extends Pattern {
   override def apply(tree: Tree) = {
     tree.collect {
       case t: Template =>
-        t.stats.getOrElse(Seq.empty)
+        t.stats
       case q"package $ref { ..$stats }" =>
         stats
       case t: Term.Block =>
         t.stats
-    }.map(imports).flatMap(duplicatedImporters).map { case tree =>
+    }.map(imports).flatMap(duplicatedImporters).map { tree =>
       Result(message(tree), tree)
     }
   }
@@ -27,7 +27,7 @@ case object Custom_Scala_GroupImports extends Pattern {
 
         importers
           .map { case (_, importer) => importer }
-          .sortBy { (importer:Tree) => (importer.pos.start.line, importer.pos.start.column) }
+          .sortBy { importer:Tree => (importer.pos.startLine, importer.pos.startColumn) }
           .take(1)
     }.flatten
   }

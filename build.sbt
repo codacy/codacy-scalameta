@@ -49,7 +49,6 @@ lazy val common = project.in(file("common"))
   .settings(scalaVersion := scalaV)
   .settings( libraryDependencies ++= Seq(
     Dependencies.codacyEngine,
-    Dependencies.playJson,
     Dependencies.betterFiles
   ))
 
@@ -58,7 +57,7 @@ lazy val macros = project.in(file("macros")).
   settings(libraryDependencies += Def.setting(scalaReflect).value).
   dependsOn(common)
 
-enablePlugins(JavaAppPackaging)
+enablePlugins(AshScriptPlugin)
 
 enablePlugins(DockerPlugin)
 
@@ -83,41 +82,37 @@ resourceGenerators in Compile += Def.task {
   )
 
   //this ensures that compilation fails on erroneous resources!
-  result.foreach( r => throw new Exception(s"resource generation failed $r"))
+  result.failed.foreach( r => throw new Exception(s"resource generation failed $r"))
 
   val newFiles = allFiles(file) -- curFiles
 
   newFiles.toList
 }.taskValue
 
-mappings in Universal <++= (resourceDirectory in Compile, resourceManaged, managedResources in Compile) map {
-  (resourceDir: File, base:File, files:Seq[File]) =>
-    val src = resourceDir / "docs"
-    val dest = "/docs"
+mappings in Universal ++= {
+  val src = (resourceDirectory in Compile).value / "docs"
+  val base = resourceManaged.value / "main"
+  val files = (managedResourceDirectories in Compile).value.allPaths.get
+  val dest = "/docs"
 
-    val staticResources = for {
-      path <- src.***.get
-      if !path.isDirectory
-    } yield path -> path.toString.replaceFirst(src.toString, dest)
+  val staticResources = for {
+    path <- src.allPaths.get if !path.isDirectory
+  } yield path -> path.toString.replaceFirst(src.toString, dest)
 
-    staticResources ++
-      (files pair Path.rebase (base / "main", ""))
+  staticResources ++
+    (files pair Path.rebase (base, ""))
 }
 
 val dockerUser = "docker"
 
 daemonUser in Docker := dockerUser
 
-dockerBaseImage := "frolvlad/alpine-oraclejdk8:cleaned"
+dockerBaseImage := "openjdk:8-jre-alpine"
 
 dockerCommands := dockerCommands.value.flatMap{
-  case cmd@Cmd("WORKDIR","/opt/docker") => List(cmd,
-    Cmd("USER","root"),
-    Cmd("RUN","apk update && apk add bash")
-  )
-  case cmd@Cmd("ADD","opt /opt") => List(
-    cmd,
+  case cmd@Cmd("ADD",_) => List(
     Cmd("RUN", s"adduser -u 2004 -D $dockerUser"),
+    cmd,
     Cmd("RUN", "mv /opt/docker/docs /docs")
   )
   case other => List(other)

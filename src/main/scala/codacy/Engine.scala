@@ -1,9 +1,9 @@
 package codacy
 
-import codacy.dockerApi._
+import com.codacy.tools.scala.seed.DockerEngine
 import codacy.macros.CommandLinePlugins
 
-object Engine extends DockerEngine(CodacyScalameta){
+object Engine extends DockerEngine(CodacyScalameta)(){
 
   override def main(args: Array[String]): Unit = {
     //if no plugin applies just use the default behaviour

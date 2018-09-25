@@ -102,7 +102,7 @@ case object Custom_Scala_UnusedPrivateVariables extends Pattern {
   private[this] def allStatsForName(template: Tree, names: List[Term.Name], tree: Tree): List[(Term.Name, Seq[Tree])] = {
     val stats: Seq[Tree] = Option(template).collect {
       case classDef: Defn.Class =>
-        classDef.templ.stats.getOrElse(Seq.empty) ++
+        classDef.templ.stats ++
           classDef.templ.early ++
           Option(classDef.ctor) ++
           companionStats(classDef.name, tree)
