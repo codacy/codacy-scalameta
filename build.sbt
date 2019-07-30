@@ -90,16 +90,21 @@ resourceGenerators in Compile += Def.task {
 }.taskValue
 
 mappings in Universal ++= {
-  val src = (resourceDirectory in Compile).value / "docs"
+  val src1 = (resourceDirectory in (root, Compile)).value / "docs"
+  val src2 = (resourceDirectory in (basePatterns, Compile)).value / "docs"
   val base = resourceManaged.value / "main"
   val files = (managedResourceDirectories in Compile).value.allPaths.get
   val dest = "/docs"
 
-  val staticResources = for {
-    path <- src.allPaths.get if !path.isDirectory
-  } yield path -> path.toString.replaceFirst(src.toString, dest)
+  val staticResources1 = for {
+    path <- src1.allPaths.get if !path.isDirectory
+  } yield path -> path.toString.replaceFirst(src1.toString, dest)
 
-  staticResources ++
+  val staticResources2 = for {
+    path <- src2.allPaths.get if !path.isDirectory
+  } yield path -> path.toString.replaceFirst(src2.toString, dest)
+
+  staticResources1 ++ staticResources2 ++
     (files pair Path.rebase (base, ""))
 }
 
