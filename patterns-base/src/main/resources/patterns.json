@@ -249,6 +249,16 @@
       "patternId": "Custom_Scala_EmptyTryBlock",
       "level": "Warning",
       "category": "ErrorProne"
+    },
+    {
+      "patternId": "Custom_Scala_DuplicatedCase",
+      "level": "Warning",
+      "category": "ErrorProne"
+    },
+    {
+      "patternId": "Custom_Scala_DuplicatedIfElseIf",
+      "level": "Warning",
+      "category": "ErrorProne"
     }
   ]
 }
