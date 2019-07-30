@@ -1,7 +1,7 @@
 import sbt._
 
 object Dependencies {
-  val scalaV = "2.12.6"
+  val scalaV = "2.12.8"
 
   val betterFiles   = "com.github.pathikrit" %% "better-files" % "3.6.0"
   val codacyEngine  = "com.codacy" %% "codacy-engine-scala-seed" % "3.0.168"
