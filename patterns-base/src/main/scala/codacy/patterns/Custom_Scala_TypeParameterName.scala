@@ -11,7 +11,7 @@ class Custom_Scala_TypeParameterName(conf:Custom_Scala_TypeParameterName.Configu
 
   override def apply(tree: Tree): Iterable[Result] = {
     tree.collect {
-      case t@tparam"..$mods $tparamname[..$tparams] >: $tpeopt1 <: $tpeopt2 <% ..$tpes1 : ..$tpes2" if isOffender(tparamname) =>
+      case t@tparam"..$_ $tparamname[..$_] >: $_ <: $_ <% ..$_ : ..$_" if isOffender(tparamname) =>
         Result(message(tparamname), tparamname)
     }
   }
