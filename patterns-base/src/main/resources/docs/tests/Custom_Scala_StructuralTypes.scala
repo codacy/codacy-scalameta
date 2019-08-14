@@ -17,4 +17,5 @@ abstract class Foo{
   //#Warn: Custom_Scala_StructuralTypes
   def bar: NotStructural with Structural{ val o:A }
 
+  type Aux[Outer, Inner] = Primitive[Outer] { type PrimitiveType = Inner }
 }
