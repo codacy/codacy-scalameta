@@ -10,6 +10,6 @@ object Engine extends DockerEngine(CodacyScalameta)() {
     lazy val defaultPlugin = new CommandLinePlugin({ case args => super[DockerEngine].main(args) })
     val plugins: List[CommandLinePlugin] = CommandLinePlugins.list
 
-    plugins.find { case plugin: CommandLinePlugin => plugin.main.isDefinedAt(args) }.getOrElse(defaultPlugin).main(args)
+    plugins.find(_.main.isDefinedAt(args)).getOrElse(defaultPlugin).main(args)
   }
 }
