@@ -71,3 +71,6 @@ project/plugins/project/
 project/project/
 /lib/
 lib/
+
+.metals
+.bloop
