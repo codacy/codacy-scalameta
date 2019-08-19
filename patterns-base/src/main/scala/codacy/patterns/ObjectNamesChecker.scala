@@ -10,9 +10,12 @@ class ObjectNamesChecker(config: ObjectNamesChecker.Configuration) extends Patte
   def this() = this(ObjectNamesChecker.Configuration())
 
   override def apply(tree: Tree): Iterable[Result] = {
-    tree.collect { case mDecl@Defn.Object(_, name, _) if ! config.regex.pattern.matcher(name.value).matches() =>
-      Result(Message(s"Object name does not match the regular expression '${config.regex}'"), mDecl)
-    }.to[Set]
+    tree
+      .collect {
+        case mDecl @ Defn.Object(_, name, _) if !config.regex.pattern.matcher(name.value).matches() =>
+          Result(Message(s"Object name does not match the regular expression '${config.regex}'"), mDecl)
+      }
+      .to[Set]
   }
 }
 

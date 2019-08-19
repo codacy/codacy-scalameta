@@ -7,14 +7,18 @@ import scala.meta._
 case object Custom_Scala_ImportsAtBeginningOfPackage extends Pattern {
 
   override def apply(tree: Tree): Iterable[Result] = {
-    tree.collect {
-      case q"package $_ { ..$stats }" =>
-        filterPackages(stats).dropWhile(isImport).flatMap(
-          _.collect { case t: Tree if isNonLocalParamImport(t) =>
-            Result(message(t), t)
-          }
-        )
-    }.flatten.to[Set]
+    tree
+      .collect {
+        case q"package $_ { ..$stats }" =>
+          filterPackages(stats)
+            .dropWhile(isImport)
+            .flatMap(_.collect {
+              case t: Tree if isNonLocalParamImport(t) =>
+                Result(message(t), t)
+            })
+      }
+      .flatten
+      .to[Set]
   }
 
   private[this] def filterPackages(stats: Seq[Stat]): Seq[Stat] = {
