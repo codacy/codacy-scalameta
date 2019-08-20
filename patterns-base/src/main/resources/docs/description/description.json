@@ -332,5 +332,35 @@
         "description": "The regex for name validation"
       }
     ]
+  },
+  {
+    "patternId": "Custom_Scala_EmptyIfBlock",
+    "title": "Avoid using empty blocks in if statements",
+    "description": "Avoid using empty blocks in if statements.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_EmptyForBlock",
+    "title": "Avoid using empty blocks in for statements",
+    "description": "Avoid using empty blocks in for statements.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_EmptyWhileBlock",
+    "title": "Avoid using empty blocks in while statements",
+    "description": "Avoid using empty blocks in while statements.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_EmptyMethodBlock",
+    "title": "Avoid using empty methods",
+    "description": "Avoid using empty methods.",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_EmptyTryBlock",
+    "title": "Avoid using empty try blocks",
+    "description": "Avoid using empty try blocks.",
+    "timeToFix": 5
   }
 ]

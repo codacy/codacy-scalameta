@@ -224,6 +224,31 @@
       "patternId": "MethodNamesChecker",
       "level": "Info",
       "category": "CodeStyle"
+    },
+    {
+      "patternId": "Custom_Scala_EmptyIfBlock",
+      "level": "Warning",
+      "category": "ErrorProne"
+    },
+    {
+      "patternId": "Custom_Scala_EmptyForBlock",
+      "level": "Warning",
+      "category": "ErrorProne"
+    },
+    {
+      "patternId": "Custom_Scala_EmptyWhileBlock",
+      "level": "Warning",
+      "category": "ErrorProne"
+    },
+    {
+      "patternId": "Custom_Scala_EmptyMethodBlock",
+      "level": "Warning",
+      "category": "ErrorProne"
+    },
+    {
+      "patternId": "Custom_Scala_EmptyTryBlock",
+      "level": "Warning",
+      "category": "ErrorProne"
     }
   ]
 }

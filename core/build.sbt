@@ -3,9 +3,10 @@ import Dependencies._
 name := """codacy-patterns-core"""
 
 //core dependencies
-val scalaLib      = "org.scala-lang" % "scala-library"  % scalaV
-val scalaCompiler = "org.scala-lang" % "scala-compiler" % scalaV
-val scalameta     = "org.scalameta" %% "scalameta" % "4.0.0" withSources()
+val scalaLib         = "org.scala-lang" % "scala-library"  % scalaV
+val scalaCompiler    = "org.scala-lang" % "scala-compiler" % scalaV
+val scalameta        = "org.scalameta" %% "scalameta" % "4.0.0" withSources()
+val scalametaContrib = "org.scalameta" %% "contrib" % "4.0.0" withSources()
 
 version := "0.3.0"
 
@@ -15,6 +16,7 @@ organization := "com.codacy"
 
 libraryDependencies ++= Seq(
   scalameta,
+  scalametaContrib,
   scalaLib,
   scalaReflect,
   scalaCompiler
