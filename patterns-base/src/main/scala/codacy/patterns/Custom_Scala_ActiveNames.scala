@@ -4,13 +4,13 @@ import codacy.base.{Pattern, Result}
 
 import scala.meta._
 
-case object Custom_Scala_ActiveNames extends Pattern{
+case object Custom_Scala_ActiveNames extends Pattern {
 
   override def apply(tree: Tree) = {
-    tree.collect{
+    tree.collect {
       //case q"..$mods def $name[..$tparams](...$paramss): $tpeopt = $expr"
-      case t:Defn.Def if t.name.toString().startsWith("set") =>
-        Result(message(t),t)
+      case t: Defn.Def if t.name.toString().startsWith("set") =>
+        Result(message(t), t)
     }
   }
 

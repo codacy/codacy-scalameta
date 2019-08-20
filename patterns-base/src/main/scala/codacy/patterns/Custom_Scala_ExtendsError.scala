@@ -9,7 +9,7 @@ case object Custom_Scala_ExtendsError extends Pattern {
   override def apply(tree: Tree): List[Result] = {
     tree.collect {
 
-      case t@q"..$mods class $name (..$paramss) extends ..$supers {..$body}" if isOffender(supers) =>
+      case t @ q"..$mods class $name (..$paramss) extends ..$supers {..$body}" if isOffender(supers) =>
         Result(message(t), t)
     }
   }

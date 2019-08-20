@@ -4,13 +4,13 @@ import codacy.base.Pattern
 
 import scala.meta._
 
-case object Custom_Scala_LowerCasePatternMatching extends Pattern{
+case object Custom_Scala_LowerCasePatternMatching extends Pattern {
 
   override def apply(tree: Tree) = {
     tree.collect {
-      case t@p"case ${pat: Pat.Var} => $expr" if isOffender(t, pat) =>
-        Result(message(t),t)
-    }    
+      case t @ p"case ${pat: Pat.Var} => $expr" if isOffender(t, pat) =>
+        Result(message(t), t)
+    }
   }
 
   private[this] def isOffender(tree: Tree, pat: Pat) = {
@@ -23,7 +23,7 @@ case object Custom_Scala_LowerCasePatternMatching extends Pattern{
   }
 
   private[this] def isCaseFromPartialFunction(tree: Tree): Boolean = {
-    tree.parent.flatMap(_.parent).exists{
+    tree.parent.flatMap(_.parent).exists {
       case q"..$mods val ..$patsnel: $tpeopt = { ..case $casesnel }" => true
       case q"$expr $tpe { ..case $casesnel}" if isPartialApplication(tpe) => true
       case q"$expr.$tpe { ..case $casesnel }" if isPartialApplication(tpe) => true
@@ -34,7 +34,7 @@ case object Custom_Scala_LowerCasePatternMatching extends Pattern{
   }
 
   private[this] def isCaseFromCollect(tree: Tree): Boolean = {
-    tree.parent.flatMap(_.parent).exists{
+    tree.parent.flatMap(_.parent).exists {
       case q"$_.collect(..$_)" => true
       case q"$_.collect[..$_](..$_)" => true
       case q"$_ collect $_" => true
@@ -43,8 +43,8 @@ case object Custom_Scala_LowerCasePatternMatching extends Pattern{
   }
 
   private[this] def isLowerCase(pat: Pat) = {
-    pat match{
-      case q"${name: Pat.Var }" =>
+    pat match {
+      case q"${name: Pat.Var}" =>
         name.name.value.headOption.exists(Character.isLowerCase)
       case _ =>
         false
@@ -52,7 +52,7 @@ case object Custom_Scala_LowerCasePatternMatching extends Pattern{
   }
 
   private[this] def hasDeclaredType(pat: Pat) = {
-    pat.collect { case t@p"$expr: $tpe" => t}.nonEmpty
+    pat.collect { case t @ p"$expr: $tpe" => t }.nonEmpty
   }
 
   private[this] def message(tree: Tree) = Message("Lower case pattern matching.")

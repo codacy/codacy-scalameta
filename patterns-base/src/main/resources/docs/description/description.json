@@ -362,5 +362,17 @@
     "title": "Avoid using empty try blocks",
     "description": "Avoid using empty try blocks.",
     "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_DuplicatedIfElseIf",
+    "title": "Prohibit duplicates same condition on if else if",
+    "description": "Prohibits same expression to the if and else if statements",
+    "timeToFix": 5
+  },
+  {
+    "patternId": "Custom_Scala_DuplicatedCase",
+    "title": "Prohibit duplicates case patterns",
+    "description": "Prohibits same expression on cases inside the same scope",
+    "timeToFix": 5
   }
 ]

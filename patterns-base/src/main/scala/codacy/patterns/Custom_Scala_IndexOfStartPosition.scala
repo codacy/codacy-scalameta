@@ -8,7 +8,7 @@ case object Custom_Scala_IndexOfStartPosition extends Pattern {
 
   override def apply(tree: Tree) = {
     tree.collect {
-      case t@q"$expr.indexOf( ..${args: Seq[Term]} )" if args.length == 1 =>
+      case t @ q"$expr.indexOf( ..${args: Seq[Term]} )" if args.length == 1 =>
         Result(message(t), t)
     }
   }

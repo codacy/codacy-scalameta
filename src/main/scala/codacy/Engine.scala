@@ -3,16 +3,13 @@ package codacy
 import com.codacy.tools.scala.seed.DockerEngine
 import codacy.macros.CommandLinePlugins
 
-object Engine extends DockerEngine(CodacyScalameta)(){
+object Engine extends DockerEngine(CodacyScalameta)() {
 
   override def main(args: Array[String]): Unit = {
     //if no plugin applies just use the default behaviour
-    lazy val defaultPlugin = new CommandLinePlugin({ case args => super[DockerEngine].main(args)})
+    lazy val defaultPlugin = new CommandLinePlugin({ case args => super[DockerEngine].main(args) })
     val plugins: List[CommandLinePlugin] = CommandLinePlugins.list
 
-    plugins.
-      find{ case plugin:CommandLinePlugin => plugin.main.isDefinedAt(args)}.
-      getOrElse(defaultPlugin).
-      main( args )
+    plugins.find(_.main.isDefinedAt(args)).getOrElse(defaultPlugin).main(args)
   }
 }

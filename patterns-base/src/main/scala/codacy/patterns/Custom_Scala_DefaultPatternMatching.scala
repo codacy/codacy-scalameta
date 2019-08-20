@@ -4,16 +4,17 @@ import codacy.base.Pattern
 
 import scala.meta._
 
-case object Custom_Scala_DefaultPatternMatching extends Pattern{
+case object Custom_Scala_DefaultPatternMatching extends Pattern {
 
   override def apply(tree: Tree): List[Result] = {
-    val allCases: Seq[Tree] = tree.collect{
-      case t@p"case $pat if $guard => $expr" if isOffender(t) =>
+    val allCases: Seq[Tree] = tree.collect {
+      case t @ p"case $pat if $guard => $expr" if isOffender(t) =>
         t
     }
 
-    allCases.groupBy(_.parent).toList.collect{ case (Some(parent),cases) if ! hasDefaultCase(cases) =>
-      Result(message,parent)
+    allCases.groupBy(_.parent).toList.collect {
+      case (Some(parent), cases) if !hasDefaultCase(cases) =>
+        Result(message, parent)
     }
   }
 
@@ -31,8 +32,8 @@ case object Custom_Scala_DefaultPatternMatching extends Pattern{
         case p"$expr(..$pats)" => expr.toString
       }.toSet
     }
-    types.fold(false) {
-      item => (Set("Left", "Right") subsetOf item) || (Set("Failure", "Success") subsetOf item)
+    types.fold(false) { item =>
+      (Set("Left", "Right") subsetOf item) || (Set("Failure", "Success") subsetOf item)
     }
   }
 
@@ -43,7 +44,7 @@ case object Custom_Scala_DefaultPatternMatching extends Pattern{
   }
 
   private[this] def isCaseFromPartialFunction(tree: Tree): Boolean = {
-    tree.parent.flatMap(_.parent).exists{
+    tree.parent.flatMap(_.parent).exists {
       case q"..$mods val ..$patsnel: $tpeopt = { ..case $casesnel }" => true
       case q"$expr $tpe { ..case $casesnel}" if isPartialApplication(tpe) => true
       case q"$expr.$tpe { ..case $casesnel }" if isPartialApplication(tpe) => true
@@ -54,7 +55,7 @@ case object Custom_Scala_DefaultPatternMatching extends Pattern{
   }
 
   private[this] def isCaseFromCollect(tree: Tree): Boolean = {
-    tree.parent.flatMap(_.parent).exists{
+    tree.parent.flatMap(_.parent).exists {
       case q"$_.collect(..$_)" => true
       case q"$_.collect[..$_](..$_)" => true
       case q"$_ collect $_" => true
@@ -65,11 +66,11 @@ case object Custom_Scala_DefaultPatternMatching extends Pattern{
     }
   }
 
-  private[this] def hasDefaultCase(cases:Seq[Tree]) = {
+  private[this] def hasDefaultCase(cases: Seq[Tree]) = {
     cases.exists {
-      case t@p"case $pat if $guard => $_" if guard.isEmpty =>
+      case t @ p"case $pat if $guard => $_" if guard.isEmpty =>
         //check the pattern
-        pat match{
+        pat match {
           //Extract
           case p"$expr(..$pats)" => false
           //Typed
