@@ -8,9 +8,9 @@ case object Custom_Scala_UtilTryForTryCatch extends Pattern {
 
   override def apply(tree: Tree) = {
     tree.collect {
-      case t @ q"try $expr catch { ..case $cases } finally $expropt" =>
+      case t @ q"try $_ catch { ..case $expr } finally $_" if expr.nonEmpty =>
         Result(message(t), t)
-      case t @ q"try $expr catch $_ finally $expropt" =>
+      case t @ q"try $_ catch $_ finally $_" =>
         Result(message(t), t)
     }
   }

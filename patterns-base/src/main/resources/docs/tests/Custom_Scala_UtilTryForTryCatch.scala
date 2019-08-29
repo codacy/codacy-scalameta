@@ -14,4 +14,10 @@ class TryCatch {
     try(throw new Exception(""))
     catch{ case NonFatal(e) => "" }
 
+    try{
+      ""
+    } finally {
+      ""
+    }
+
 }
