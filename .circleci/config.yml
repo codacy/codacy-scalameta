@@ -1,7 +1,8 @@
 version: 2.1
 
 orbs:
-  codacy: codacy/base@0.0.13
+  codacy: codacy/base@0.3.10
+  codacy_plugins_test: codacy/plugins-test@0.2.2
 
 jobs:
   publish_local:
@@ -17,63 +18,11 @@ jobs:
           name: Save docker to file
           command: |
             mkdir -p workspace
-            docker save --output workspace/docker.tar codacy-engine-scalameta:latest
+            docker save --output ~/workdir/docker-image.tar codacy-engine-scalameta:latest
       - persist_to_workspace:
-          root: workspace
+          root: ~/
           paths:
-            - docker.tar
-  # TODO: switch to plugins_test orb
-  plugins_test:
-    machine: true
-    working_directory: ~/
-    steps:
-      - run:
-          name: Clone test project
-          command: |
-            (git -C ~/codacy-plugins-test fetch --all &&
-              git -C ~/codacy-plugins-test reset --hard origin/master) ||
-                git clone git://github.com/codacy/codacy-plugins-test.git ~/codacy-plugins-test
-      - run:
-          name: Generate cache key
-          working_directory: ~/codacy-plugins-test
-          command: |
-            shasum build.sbt \
-              project/plugins.sbt \
-              project/build.properties \
-              project/Common.scala \
-              project/Dependencies.scala > /tmp/dependencies.cache.tmp
-      - restore_cache:
-          key: sbt-ivy2-dependencies-1.0.0-{{ checksum "/tmp/dependencies.cache.tmp" }}
-      - run:
-          name: Compile test project
-          working_directory: ~/codacy-plugins-test
-          command: sbt compile
-      - save_cache:
-          paths:
-            - "~/.ivy2"
-            - "~/.m2"
-            - "~/.sbt"
-            - "~/codacy-plugins-test/target"
-            - "~/codacy-plugins-test/project/target"
-            - "~/codacy-plugins-test/project/project"
-          key: sbt-ivy2-dependencies-1.0.0-{{ checksum "/tmp/dependencies.cache.tmp" }}
-      - attach_workspace:
-          at: ~/
-      - run:
-          name: Load docker from file
-          command: docker load --input docker.tar
-      - run:
-          name: Test json
-          working_directory: ~/codacy-plugins-test
-          command: sbt -Dcodacy.tests.ignore.descriptions=false "runMain codacy.plugins.DockerTest json codacy-engine-scalameta:latest"
-      - run:
-          name: Test patterns
-          working_directory: ~/codacy-plugins-test
-          command: sbt -Dcodacy.tests.noremove=false -Dcodacy.tests.threads=8 "runMain codacy.plugins.DockerTest pattern codacy-engine-scalameta:latest"
-      - run:
-          name: Test plugin
-          working_directory: ~/codacy-plugins-test
-          command: sbt "runMain codacy.plugins.DockerTest plugin codacy-engine-scalameta:latest"
+            - workdir/docker-image.tar
 
   publish:
     machine: true
@@ -83,7 +32,7 @@ jobs:
           at: ~/
       - run:
           name: Load docker from file
-          command: docker load --input ~/docker.tar
+          command: docker load --input ~/workdir/docker-image.tar
       - deploy:
           name: Push application Docker image
           command: |
@@ -105,7 +54,9 @@ workflows:
       - publish_local:
           requires:
             - build
-      - plugins_test:
+      - codacy_plugins_test/run:
+          name: plugins_test
+          docker_image_name: codacy-engine-scalameta
           requires:
             - publish_local
       - publish:
