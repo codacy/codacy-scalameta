@@ -12,5 +12,5 @@ Pattern matching should always have a default case:
         case a if false => other
         case _ => another
     }
-    
+
  [More Info](http://www.scala-lang.org/files/archive/spec/2.11/08-pattern-matching.html)

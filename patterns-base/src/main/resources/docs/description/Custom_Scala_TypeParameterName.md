@@ -7,7 +7,7 @@ A common practice is to use more descriptive names prefixed with a capital T.
 For example:
 ```
     case class Entry[TKey, TProperties](key: TKey, properties: TProperties)
-    
+
     trait HistoryBuilder[TKey, TEntity <: Entity[TProperties], TProperties] {
     ...
     }
