@@ -3,4 +3,4 @@ Using the `get` method will throw an Exception on empty Options/Projections whic
 
  For more details:
 
- [Blog - Scala Options](http://blog.protegra.com/2014/01/28/exploring-scala-options/)
+ [Blog - The Option type](https://danielwestheide.com/blog/the-neophytes-guide-to-scala-part-5-the-option-type/)
