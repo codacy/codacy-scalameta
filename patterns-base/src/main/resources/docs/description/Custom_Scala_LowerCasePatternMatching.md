@@ -13,4 +13,3 @@ To fix it, use an identifier which starts with an upper case letter, use case _ 
     val lc = "lc"
     "something" match { case lc: Any => "lc" } // result = "lc"
     "something" match { case _ => "lc" } // result = "lc"
-

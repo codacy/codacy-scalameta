@@ -18,5 +18,5 @@ Pattern matching should not have single cases with conditions:
     "somestring" match {
         case "somestring" =>
     }
-    
+
  [More Info](http://docs.scala-lang.org/tutorials/tour/pattern-matching.html)
