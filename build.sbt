@@ -30,18 +30,6 @@ lazy val core = project.in(file("core"))
 lazy val basePatterns = project.in(file("patterns-base"))
   .settings(scalaVersion := scalaV)
   .dependsOn(core)
-  .settings(
-    resourceGenerators in Compile += Def.task {
-      val dest: File = (resourceManaged in Compile).value / "patterns"
-      val src = (scalaSource in Compile).value / "codacy" / "patterns"
-
-      val all = for {
-        path <- src.listFiles().toList if path.toString.endsWith(".scala")
-      } yield path -> dest / path.name
-
-      IO.copy(all).toList
-    }.taskValue
-  )
 
 //the bridge between a codacy-engine and scala.meta patterns
 lazy val common = project.in(file("common"))
