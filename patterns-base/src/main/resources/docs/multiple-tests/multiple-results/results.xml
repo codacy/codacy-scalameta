@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<checkstyle version="1.5">
+    <file name="Custom_Scala_BadTagPresenceCheck.scala">
+        <error source="Custom_Scala_BadTagPresenceCheck" line="5" message="Take the required action to fix the issue indicated by this comment." severity="info" />
+        <error source="Custom_Scala_BadTagPresenceCheck" line="7" message="Take the required action to fix the issue indicated by this comment." severity="info" />
+        <error source="Custom_Scala_BadTagPresenceCheck" line="13" message="Take the required action to fix the issue indicated by this comment." severity="info" />
+    </file>
+
+    <file name="Custom_Scala_ActiveNames.scala">
+        <error source="Custom_Scala_EmptyMethodBlock" line="13" message="Avoid using empty methods" severity="warning" />
+        <error source="Custom_Scala_EmptyMethodBlock" line="19" message="Avoid using empty methods" severity="warning" />
+        <error source="Custom_Scala_EmptyMethodBlock" line="7" message="Avoid using empty methods" severity="warning" />
+        <error source="Custom_Scala_EmptyMethodBlock" line="21" message="Avoid using empty methods" severity="warning" />
+
+
+        <error source="Custom_Scala_ActiveNames" line="7" message="Use active names for operations with side effects" severity="info" />
+        <error source="Custom_Scala_ActiveNames" line="13" message="Use active names for operations with side effects" severity="info" />
+        <error source="Custom_Scala_ActiveNames" line="19" message="Use active names for operations with side effects" severity="info" />
+    </file>
+</checkstyle>

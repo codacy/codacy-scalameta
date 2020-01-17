@@ -11,6 +11,7 @@ import codacy.utils.FileHelpers._
 import play.api.libs.json._
 
 import scala.collection.JavaConversions._
+import scala.util.{Failure, Success, Try}
 import scala.util.matching.Regex
 
 object CheckResources {
@@ -48,6 +49,19 @@ object CheckResources {
         val destination = destFolder / testFile.name
         testFile.copyTo(destination, overwrite = true)
       }
+  }
+
+  private def allMultipleTests(classLoader: URLClassLoader, dest: File) = {
+    val destFolder = (dest / "docs" / "multiple-tests").createIfNotExists(asDirectory = true, createParents = true)
+
+    val multipleTestsResources = classLoader.findResources("docs/multiple-tests")
+    val multipleTestsResFile = File(multipleTestsResources.nextElement().getFile)
+
+    multipleTestsResFile
+      .list(f => f.parent == multipleTestsResFile)
+      .foreach(f => {
+        f.copyTo(destFolder / f.name, overwrite = true)
+      })
   }
 
   private def allSources(classLoader: URLClassLoader, dest: File) = {
@@ -121,6 +135,7 @@ object CheckResources {
         allDescriptions(urlCs, destDir).toList ++
           allSources(urlCs, destDir) ++
           allTests(urlCs, destDir) :+
+          allMultipleTests(urlCs, destDir) :+
           descriptionsJson(urlCs, destDir) :+
           patternsJson(urlCs, destDir, toolName)
     }
