@@ -1,45 +1,8 @@
 version: 2.1
 
 orbs:
-  codacy: codacy/base@0.3.10
-  codacy_plugins_test: codacy/plugins-test@0.2.2
-
-jobs:
-  publish_local:
-    machine: true
-    working_directory: ~/workdir
-    steps:
-      - attach_workspace:
-          at: ~/
-      - run:
-          name: Publish tool docker locally
-          command: sbt ";docker:stage;docker:publishLocal"
-      - run:
-          name: Save docker to file
-          command: |
-            mkdir -p workspace
-            docker save --output ~/workdir/docker-image.tar codacy-engine-scalameta:latest
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - workdir/docker-image.tar
-
-  publish:
-    machine: true
-    working_directory: ~/workdir
-    steps:
-      - attach_workspace:
-          at: ~/
-      - run:
-          name: Load docker from file
-          command: docker load --input ~/workdir/docker-image.tar
-      - deploy:
-          name: Push application Docker image
-          command: |
-            docker login -u $DOCKER_USER -p $DOCKER_PASS
-            docker tag codacy-engine-scalameta codacy/$CIRCLE_PROJECT_REPONAME
-            docker tag codacy-engine-scalameta codacy/$CIRCLE_PROJECT_REPONAME:$(cat .version)
-            docker push codacy/$CIRCLE_PROJECT_REPONAME
+  codacy: codacy/base@2.0.1
+  codacy_plugins_test: codacy/plugins-test@0.7.1
 
 workflows:
   version: 2
@@ -47,26 +10,34 @@ workflows:
     jobs:
       - codacy/checkout_and_version
       - codacy/sbt:
-          name: build
-          cmd: sbt compile
+          name: publish_docker_local
+          cmd: |
+            sbt "test;
+                 set version in Docker := \"latest\";
+                 docker:publishLocal"
+            docker save --output docker-image.tar $CIRCLE_PROJECT_REPONAME:latest
+          persist_to_workspace: true
           requires:
             - codacy/checkout_and_version
-      - publish_local:
-          requires:
-            - build
       - codacy_plugins_test/run:
           name: plugins_test
-          docker_image_name: codacy-engine-scalameta
           requires:
-            - publish_local
-      - publish:
-          context: CodacyDocker
+            - publish_docker_local
+      - codacy/shell:
+          name: publish_dockerhub
+          cmd: |
+            docker load --input docker-image.tar
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker tag $CIRCLE_PROJECT_REPONAME codacy/$CIRCLE_PROJECT_REPONAME:latest
+            docker tag $CIRCLE_PROJECT_REPONAME codacy/$CIRCLE_PROJECT_REPONAME:$(cat .version)
+            docker push codacy/$CIRCLE_PROJECT_REPONAME
           filters:
             branches:
               only: master
           requires:
+            - publish_docker_local
             - plugins_test
       - codacy/tag_version:
-          name: tag_version
+          context: CodacyAWS
           requires:
-            - publish
+            - publish_dockerhub
