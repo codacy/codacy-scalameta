@@ -21,6 +21,7 @@ workflows:
             - codacy/checkout_and_version
       - codacy_plugins_test/run:
           name: plugins_test
+          run_multiple_tests: true
           requires:
             - publish_docker_local
       - codacy/shell:
