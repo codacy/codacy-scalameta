@@ -51,17 +51,24 @@ object CheckResources {
       }
   }
 
+  private def copyFilesRecursively(f: File, destination: File): Unit = {
+    destination.createIfNotExists(asDirectory = true, createParents = true)
+
+    if (f.isDirectory) {
+      f.list.foreach(folder => copyFilesRecursively(folder, destination / f.name))
+    } else {
+      f.copyTo(destination / f.name, overwrite = true)
+    }
+  }
+
   private def allMultipleTests(classLoader: URLClassLoader, dest: File) = {
     val destFolder = (dest / "docs" / "multiple-tests").createIfNotExists(asDirectory = true, createParents = true)
 
-    val multipleTestsResources = classLoader.findResources("docs/multiple-tests")
-    val multipleTestsResFile = File(multipleTestsResources.nextElement().getFile)
-
-    multipleTestsResFile
-      .list(f => f.parent == multipleTestsResFile)
-      .foreach(f => {
-        f.copyTo(destFolder / f.name, overwrite = true)
-      })
+    classLoader
+      .findResources("docs/multiple-tests")
+      .map(_.toFile)
+      .flatMap(_.list)
+      .map(sourceFile => copyFilesRecursively(sourceFile, destFolder))
   }
 
   private def allSources(classLoader: URLClassLoader, dest: File) = {
@@ -134,7 +141,7 @@ object CheckResources {
       case urlCs: URLClassLoader =>
         allDescriptions(urlCs, destDir).toList ++
           allSources(urlCs, destDir) ++
-          allTests(urlCs, destDir) :+
+          allTests(urlCs, destDir) ++
           allMultipleTests(urlCs, destDir) :+
           descriptionsJson(urlCs, destDir) :+
           patternsJson(urlCs, destDir, toolName)
