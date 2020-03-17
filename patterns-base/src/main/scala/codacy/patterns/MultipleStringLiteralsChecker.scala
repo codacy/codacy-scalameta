@@ -1,6 +1,6 @@
 package codacy.patterns
 
-import codacy.base.{Pattern, Result}
+import codacy.base.Pattern
 
 import scala.meta._
 
@@ -27,7 +27,7 @@ case object MultipleStringLiteralsChecker extends Pattern {
   }
 
   private[this] def message(lits: List[String], numOccurences: Int) = {
-    val value = lits.mkString("${ .. }")
+    val value = lits.mkString(s"$${ .. }")
     Message(s"The string literal '${value}' appears $numOccurences times in the file.")
   }
 }

@@ -55,7 +55,6 @@ case object Custom_Scala_NonFatal extends Pattern {
   private[this] lazy val genErr = reflect.runtime.universe.typeOf[Throwable]
   private[this] lazy val genErr2 = reflect.runtime.universe.typeOf[Exception]
 
-  private[this] lazy val allEvil = Set(vmErr, thrErr, intErr, linErr, ctrlErr, genErr, genErr2)
   private[this] lazy val allEvilSymbols = Set(vmErr, thrErr, intErr, linErr, ctrlErr, genErr, genErr2).flatMap {
     case tpe =>
       val sym = tpe.typeSymbol

@@ -11,7 +11,6 @@ import codacy.utils.FileHelpers._
 import play.api.libs.json._
 
 import scala.collection.JavaConversions._
-import scala.util.{Failure, Success, Try}
 import scala.util.matching.Regex
 
 object CheckResources {

@@ -1,6 +1,6 @@
 package codacy.patterns
 
-import codacy.base.{Pattern, Result}
+import codacy.base.Pattern
 
 import scala.meta._
 import scala.util.matching.Regex
