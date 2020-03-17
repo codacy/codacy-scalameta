@@ -3,11 +3,7 @@ import sbt.Keys._
 import sbt._
 import Dependencies._
 
-resolvers += "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/"
-
 name := "codacy-scalameta"
-
-version := "1.0-SNAPSHOT"
 
 scalaVersion := scalaV
 

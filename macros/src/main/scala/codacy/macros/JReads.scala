@@ -31,7 +31,7 @@ private[macros] object JReadsMacro {
   def impl2(c: whitebox.Context): c.Expr[Map[Pattern.Id,List[JsObject]]] = {
     import c.universe._
 
-    implicit val l: c.universe.Liftable[Pattern.Id] =
+    implicit val _: c.universe.Liftable[Pattern.Id] =
       Liftable( (patternId:Pattern.Id) => q"new com.codacy.plugins.api.results.Pattern.Id(${patternId.value})")
 
     val tuples = c.patternIds.map{ pID =>
@@ -45,7 +45,7 @@ private[macros] object JReadsMacro {
   def impl(c: whitebox.Context): c.Expr[Map[Pattern.Id,PatternCompanion]] = {
     import c.universe._
 
-    implicit val l: c.universe.Liftable[Pattern.Id] =
+    implicit val _: c.universe.Liftable[Pattern.Id] =
       Liftable((patternId:Pattern.Id) => q"new com.codacy.plugins.api.results.Pattern.Id(${patternId.value})")
 
     val tuples = c.patternIds.map{ pID =>
