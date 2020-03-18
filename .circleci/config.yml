@@ -35,9 +35,9 @@ workflows:
       - codacy/sbt:
           name: publish_sonatype
           cmd: sbt retrieveGPGKeys core/publishSigned sonatypeBundleRelease
-          filters:
-            branches:
-              only: master
+          # filters:
+          #   branches:
+          #     only: master
           context: CodacyAWS
           requires:
             - publish_docker_local
