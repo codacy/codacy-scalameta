@@ -8,7 +8,8 @@ workflows:
   version: 2
   build-and-deploy:
     jobs:
-      - codacy/checkout_and_version
+      - codacy/checkout_and_version:
+          write_sbt_version: true
       - codacy/sbt:
           name: publish_docker_local
           cmd: |
@@ -31,7 +32,18 @@ workflows:
           requires:
             - publish_docker_local
             - plugins_test
+      - codacy/sbt:
+          name: publish_sonatype
+          cmd: sbt retrieveGPGKeys core/publishSigned sonatypeBundleRelease
+          filters:
+            branches:
+              only: master
+          context: CodacyAWS
+          requires:
+            - publish_docker_local
+            - plugins_test
       - codacy/tag_version:
           context: CodacyAWS
           requires:
             - codacy/publish_docker
+            - publish_sonatype
