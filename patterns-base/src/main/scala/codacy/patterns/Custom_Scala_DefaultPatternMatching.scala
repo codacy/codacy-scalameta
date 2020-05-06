@@ -6,17 +6,19 @@ import scala.meta._
 
 case object Custom_Scala_DefaultPatternMatching extends Pattern {
 
-  override def apply(tree: Tree): List[Result] = {
-    val allCases: Seq[Tree] = tree.collect {
-      case t @ p"case $pat if $guard => $expr" if isOffender(t) =>
-        t
-    }
+  override def apply(tree: Tree): List[Result] =
+    tree.collect {
+      case Term.Match(_, cases: List[Case]) =>
+        val allCases = cases.collect {
+          case t @ p"case $pat if $guard => $expr" if isOffender(t) =>
+            t
+        }
 
-    allCases.groupBy(_.parent).toList.collect {
-      case (Some(parent), cases) if !hasDefaultCase(cases) =>
-        Result(message, parent)
-    }
-  }
+        allCases.groupBy(_.parent).toList.collect {
+          case (Some(parent), cases) if !hasDefaultCase(cases) =>
+            Result(message, parent)
+        }
+    }.flatten
 
   private[this] def isOffender(tree: Tree) = {
     isPartialMatchForKnownTypes(tree)
@@ -33,11 +35,7 @@ case object Custom_Scala_DefaultPatternMatching extends Pattern {
       }.toSet
     }
 
-    val knownTypes = Seq(
-      Set("Left", "Right"),
-      Set("Failure", "Success"),
-      Set("Some", "None")
-    )
+    val knownTypes = Seq(Set("Left", "Right"), Set("Failure", "Success"), Set("Some", "None"))
 
     knownTypes.exists { cases =>
       val intersection = types.intersect(cases)
