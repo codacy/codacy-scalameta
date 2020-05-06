@@ -59,5 +59,5 @@ case object Custom_Scala_DefaultPatternMatching extends Pattern {
     }
   }
 
-  private[this] lazy val message = Message("Pattern match is not exhaustive.")
+  private[this] lazy val message = Message("Pattern matching is not exhaustive.")
 }
