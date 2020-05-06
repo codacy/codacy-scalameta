@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<checkstyle version="1.5">
+    <file name="test.scala">
+        <error source="Custom_Scala_DefaultPatternMatching" line="3" message="Pattern match is not exhaustive." severity="warning" />
+        <error source="Custom_Scala_DefaultPatternMatching" line="8" message="Pattern match is not exhaustive." severity="warning" />
+        <error source="Custom_Scala_DefaultPatternMatching" line="13" message="Pattern match is not exhaustive." severity="warning" />
+    </file>
+</checkstyle>
