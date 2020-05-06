@@ -1,15 +1,15 @@
-Pattern matching should always have a default case:
+Pattern matching should always be exhaustive:
 
  Bad:
 
     something match {
-        case a if false => other
+        case Success(v) => other
     }
 
  Good:
 
     something match {
-        case a if false => other
+        case Success(v) => other
         case _ => another
     }
 
