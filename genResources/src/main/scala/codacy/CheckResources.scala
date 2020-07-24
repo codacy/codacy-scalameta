@@ -16,7 +16,7 @@ import scala.util.matching.Regex
 object CheckResources {
 
   def main(args: Array[String]): Unit = {
-    val fs = generated(Tool.Name("scalaHomebrew"), File(args.head))
+    val fs = generated(Tool.Name("codacy-scalameta-pro"), File(args.head))
     println(s"generated ${fs.size} resources")
   }
 
