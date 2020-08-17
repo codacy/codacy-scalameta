@@ -16,11 +16,6 @@
       "level": "Warning"
     },
     {
-      "patternId": "Custom_Scala_CollectionLastHead",
-      "category": "ErrorProne",
-      "level": "Warning"
-    },
-    {
       "patternId": "Custom_Scala_DefaultPatternMatching",
       "category": "ErrorProne",
       "level": "Warning"
