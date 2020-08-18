@@ -30,12 +30,6 @@
     "timeToFix": 5
   },
   {
-    "patternId": "Custom_Scala_CollectionLastHead",
-    "title": "Prohibit head and last on collections",
-    "description": "Calling head or last should be avoided on collections.",
-    "timeToFix": 5
-  },
-  {
     "patternId": "Custom_Scala_ElseIf",
     "title": "Enforce pattern matching over else-if nesting",
     "description": "Pattern matching usually increases readability of the code.",
