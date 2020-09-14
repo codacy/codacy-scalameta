@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <module name="root">
-    <module name="BeforeExecutionExclusionFileFilter">
-        <property name="fileNamePattern" value="findbugs\.xml" />
-    </module>
+    <module name="Custom_Scala_EmptyMethodBlock"/>
+    <module name="Custom_Scala_BadTagPresenceCheck"/>
+    <module name="Custom_Scala_ActiveNames"/>
 </module>
