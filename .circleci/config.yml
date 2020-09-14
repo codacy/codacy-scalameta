@@ -18,6 +18,7 @@ workflows:
                  docker:publishLocal"
             docker save --output docker-image.tar $CIRCLE_PROJECT_REPONAME:latest
           persist_to_workspace: true
+          cache_prefix: sbt-cache-14092020
           requires:
             - codacy/checkout_and_version
       - codacy_plugins_test/run:
@@ -39,6 +40,7 @@ workflows:
             branches:
               only: master
           context: CodacyAWS
+          cache_prefix: sbt-cache-14092020
           requires:
             - publish_docker_local
             - plugins_test
