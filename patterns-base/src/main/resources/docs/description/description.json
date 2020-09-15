@@ -42,6 +42,12 @@
     "timeToFix": 5
   },
   {
+    "patternId": "Custom_Scala_GetCalls",
+    "title": "Prohibit get on Option and Either",
+    "description": "Calling get should be avoided on Option and Either.",
+    "timeToFix": 5
+  },
+  {
     "patternId": "Custom_Scala_GetInMethodName",
     "title": "Prohibit prefixing getters with get",
     "description": "Active names should be given to methods.",
