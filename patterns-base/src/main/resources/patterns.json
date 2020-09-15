@@ -61,12 +61,6 @@
       "enabled": true
     },
     {
-      "patternId": "Custom_Scala_GetCalls",
-      "category": "ErrorProne",
-      "level": "Warning",
-      "enabled": true
-    },
-    {
       "patternId": "Custom_Scala_GetInMethodName",
       "category": "ErrorProne",
       "level": "Info",
