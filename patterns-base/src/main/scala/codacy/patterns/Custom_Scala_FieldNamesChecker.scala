@@ -91,20 +91,16 @@ class Custom_Scala_FieldNamesChecker(configuration: Custom_Scala_FieldNamesCheck
     }.flatten
   }
 
-  private[this] def isEscaped(name: Term.Name): Boolean = {
-    name.tokens.collectFirst { case id: Token.Ident => id.syntax }.exists {
-      case value => value.startsWith("`") && value.endsWith("`")
-    }
-  }
-
   private[this] def isConflictingName(tree: Tree): Boolean = {
     val name = tree match {
-      case q"${term: Pat.Var}" if !isEscaped(term.name) =>
-        term.name.value
-      case q"${name: Term.Name}" if !isEscaped(name) =>
-        name.value
+      case q"${term: Pat.Var}" =>
+        Some(term.name.value)
+      case q"${name: Term.Name}" =>
+        Some(name.value)
+      case t =>
+        None
     }
-    name match {
+    name.exists {
       case name if isConstant(tree) => !configuration.constantsRegex.pattern.matcher(name).matches()
       case name => !configuration.regex.pattern.matcher(name).matches()
     }

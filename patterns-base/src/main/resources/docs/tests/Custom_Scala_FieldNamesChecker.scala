@@ -54,7 +54,9 @@ trait Foo[A]{
     //#Info: Custom_Scala_FieldNamesChecker
     val NotRegex = obj.r
 
+    //#Info: Custom_Scala_FieldNamesChecker
     val `angular-local-storage` = ???
 
+    //#Info: Custom_Scala_FieldNamesChecker
     val /*weird comment*/`Angular-local-storage` /*another weird comment*/ = ???
 }
