@@ -15,7 +15,7 @@ class Custom_Scala_FieldNamesChecker(configuration: Custom_Scala_FieldNamesCheck
         //val definitions
         case t @ q"..$_ val ..$patsnel: $tpe = $expr"
             if configuration.includeEnums || !isEnumValDefRegexOrDecl(t.parent, Option(expr), tpe) =>
-          conflictingNames(patsnel, isConstant(t))
+          conflictingNames(patsnel)
         //val declarations
         case t @ q"..$_ val ..$pnamesnel: $tpe"
             if configuration.includeEnums || !isEnumValDefRegexOrDecl(t.parent, tpe = Option(tpe)) =>
@@ -69,50 +69,47 @@ class Custom_Scala_FieldNamesChecker(configuration: Custom_Scala_FieldNamesCheck
     exprIsRegex || (extendsEnumeration && (exprIsValue || tpeIsValue))
   }
 
-  private[this] def isConstant(tree: Tree): Boolean = {
-    lazy val isConstant = tree.parent
-      .flatMap(_.parent)
-      .collect {
-        case q"..$_ object $_ extends $_" => true
-        case q"package object $_ extends $_" => true
-      }
-      .getOrElse(false)
-
-    configuration.allowConstants && isConstant
+  private[this] def isConstant(tree: Tree): Boolean = tree.parent.exists {
+    case t @ q"..$_ val ..$patsnel: $tpe = $expr" =>
+      configuration.allowConstants && t.parent
+        .flatMap(_.parent)
+        .exists {
+          case Defn.Object(_, _, _) => true
+          case Pkg.Object(_, _, _) => true
+          case _ => false
+        }
+    case _ => false
   }
 
-  private[this] def conflictingNames(trees: Seq[Tree], isConstant: Boolean = false) = {
+  private[this] def conflictingNames(trees: Seq[Tree]) = {
     trees.collect {
       //tuples
       case p"(..$exprsnel)" =>
-        exprsnel.filter(isConflictingName(_, isConstant))
-      case single if isConflictingName(single, isConstant) =>
+        exprsnel.filter(isConflictingName)
+      case single if isConflictingName(single) =>
         List(single)
     }.flatten
   }
 
-  private[this] def isEscaped(name: Term.Name): Boolean = {
-    name.tokens.collectFirst { case id: Token.Ident => id.syntax }.exists {
-      case value => value.startsWith("`") && value.endsWith("`")
+  private[this] def isConflictingName(tree: Tree): Boolean = {
+    val name = tree match {
+      case q"${term: Pat.Var}" =>
+        Some(term.name.value)
+      case q"${name: Term.Name}" =>
+        Some(name.value)
+      case t =>
+        None
+    }
+    name.exists {
+      case name if isConstant(tree) => !configuration.constantsRegex.pattern.matcher(name).matches()
+      case name => !configuration.regex.pattern.matcher(name).matches()
     }
   }
 
-  private[this] def isConflictingName(tree: Tree, isConstant: Boolean = false): Boolean = {
-    Option(tree)
-      .collect {
-        case q"${term: Pat.Var}" if !isEscaped(term.name) =>
-          term.name.value
-        case q"${name: Term.Name}" if !isEscaped(name) =>
-          name.value
-      }
-      .exists {
-        case name if isConstant => !configuration.constantsRegex.pattern.matcher(name).matches()
-        case name => !configuration.regex.pattern.matcher(name).matches()
-      }
+  private[this] def message(tree: Tree) = {
+    val regex = if (isConstant(tree)) configuration.constantsRegex else configuration.regex
+    Message(s"Field name '$tree' does not match the regular expression '$regex'")
   }
-
-  private[this] def message(tree: Tree) =
-    Message(s"Field name '$tree' does not match the regular expression '${configuration.regex}'")
 }
 
 object Custom_Scala_FieldNamesChecker {

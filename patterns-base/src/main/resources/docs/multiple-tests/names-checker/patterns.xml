@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<module name="root">
+    <module name="Custom_Scala_FieldNamesChecker">
+        <property name="constantsRegex" value="^[A-Z][A-Z_]*$" />
+        <property name="regex" value="^[A-Za-z0-9]*$" />
+        <property name="includeEnums" value="false" />
+        <property name="allowConstants" value="true" />
+    </module>
+</module>
