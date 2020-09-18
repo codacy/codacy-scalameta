@@ -45,13 +45,14 @@ object CodacyScalameta extends Tool {
       configuration match {
         case Some(defs) =>
           defs.flatMap { pDef: Pattern.Definition =>
-            val params: Set[Parameter.Definition] = pDef.parameters.getOrElse {
-              specification.patterns
-                .filter(_.patternId == pDef.patternId)
-                .flatMap(_.parameters.toList.flatMap(_.map { spec =>
-                  Parameter.Definition(spec.name, spec.default)
-                }))
-            }
+            val params: Set[Parameter.Definition] =
+              if (pDef.parameters.isEmpty) {
+                specification.patterns
+                  .filter(_.patternId == pDef.patternId)
+                  .flatMap(_.parameters.map(spec => Parameter.Definition(spec.name, spec.default)))
+              } else {
+                pDef.parameters
+              }
 
             newPatterns
               .get(pDef.patternId)
