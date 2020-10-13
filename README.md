@@ -35,7 +35,7 @@ For a full example check out the [existing patterns](https://github.com/codacy/c
 https://github.com/scalameta/scalameta/blob/master/notes/quasiquotes.md
 
 ### Tool Integration:
-https://support.codacy.com/hc/en-us/articles/207994725-Tool-Developer-Guide
+https://docs.codacy.com/related-tools/tool-developer-guide/
 
 ### Testing with "sbt console":
 
