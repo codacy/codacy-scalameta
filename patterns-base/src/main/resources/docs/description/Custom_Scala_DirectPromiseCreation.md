@@ -1,6 +1,6 @@
 It's not recommended to use the Promise object and its factory methods directly in your code. Instead you should use
- Futures and the provided combinators to manipulate Promises.
+`Futures` and the provided combinators to manipulate Promises.
 
- For more details:
+For more details:
 
- [Effective Scala](https://twitter-archive.github.io/effectivescala/#Concurrency-Futures)
+[Effective Scala](https://twitter.github.io/effectivescala/#Concurrency-Futures)

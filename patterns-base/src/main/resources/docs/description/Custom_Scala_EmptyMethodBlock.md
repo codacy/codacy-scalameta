@@ -1,7 +1,7 @@
 Avoid using empty method
 
-     def empty(): Boolean = {} // <-- avoid this
+    def empty(): Boolean = {} // <-- avoid this
 
- For more details:
+For more details:
 
- [Scala Docs](https://docs.scala-lang.org/overviews/quasiquotes/expression-details.html#function)
+[Scala Docs](https://docs.scala-lang.org/overviews/quasiquotes/expression-details.html#function)

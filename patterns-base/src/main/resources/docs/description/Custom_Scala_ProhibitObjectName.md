@@ -1,17 +1,17 @@
 Don't repeat names that are already encapsulated in package or object name
 
- Prefer:
+Prefer:
 
-     object User {
-       def get(id: Int): Option[User]
-     }
+    object User {
+      def get(id: Int): Option[User]
+    }
 
- to
+to
 
-     object User {
-       def getUser(id: Int): Option[User]
-     }
+    object User {
+      def getUser(id: Int): Option[User]
+    }
 
- They are redundant in use: `User.getUser` provides no more information than `User.get`.
+They are redundant in use: `User.getUser` provides no more information than `User.get`.
 
- [Effective Scala](http://twitter.github.io/effectivescala/#Formatting-Naming)
+[Effective Scala](https://twitter.github.io/effectivescala/#Formatting-Naming)

@@ -4,14 +4,10 @@
 
 Noncompliant Code Example:
 
-```
-public class MyException extends Error { /* ... */ }       // Noncompliant
-```
+    public class MyException extends Error { /* ... */ }       // Noncompliant
 
 Compliant Solution:
 
-```
-public class MyException extends Exception { /* ... */ }   // Compliant
-```
+    public class MyException extends Exception { /* ... */ }   // Compliant
 
- [More Info](https://sbforge.org/sonar/rules/show/pmd:DoNotExtendJavaLangError?layout=false)
+[Sonarqube](https://rules.sonarsource.com/java/RSPEC-1194)

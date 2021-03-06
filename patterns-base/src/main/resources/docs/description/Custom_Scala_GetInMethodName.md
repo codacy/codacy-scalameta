@@ -1,11 +1,11 @@
 Instead of for example:
 
-     site.getCount
+    site.getCount
 
- The count method should simply be named count and called via:
+The count method should simply be named count and called via:
 
-     site.count
+    site.count
 
- For more details:
+For more details:
 
- [Effective Scala](https://twitter-archive.github.io/effectivescala/#Formatting-Naming)
+[Effective Scala](https://twitter.github.io/effectivescala/#Formatting-Naming)

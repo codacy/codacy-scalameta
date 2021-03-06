@@ -1,16 +1,16 @@
 Pattern matching should always be exhaustive:
 
- Bad:
+Bad:
 
     something match {
-        case Success(v) => other
+      case Success(v) => other
     }
 
- Good:
+Good:
 
     something match {
-        case Success(v) => other
-        case _ => another
+      case Success(v) => other
+      case _ => another
     }
 
- [More Info](http://www.scala-lang.org/files/archive/spec/2.11/08-pattern-matching.html)
+[More Info](https://www.scala-lang.org/files/archive/spec/2.11/08-pattern-matching.html)

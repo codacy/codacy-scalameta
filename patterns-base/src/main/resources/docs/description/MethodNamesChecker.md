@@ -2,5 +2,4 @@ Textual (alphabetic) names for methods should be in the camelCase style with the
 
     def myFairMethod = ???
 
-[Source](http://docs.scala-lang.org/style/naming-conventions.html)
-
+[Scala Docs](https://docs.scala-lang.org/style/naming-conventions.html)

@@ -6,22 +6,18 @@ If you need to see whether a substring is located beyond a certain point in a st
 
 Noncompliant Code Example:
 
-```
-String name = "ismael";
+    String name = "ismael";
 
-if (name.indexOf("ae") > 2) { // Noncompliant
-  // ...
-}
-```
+    if (name.indexOf("ae") > 2) { // Noncompliant
+      // ...
+    }
 
 Compliant Solution:
 
-```
-String name = "ismael";
+    String name = "ismael";
 
-if (name.indexOf("ae", 2) > -1) {
-  // ...
-}
-```
+    if (name.indexOf("ae", 2) > -1) {
+      // ...
+    }
 
-[More Info](http://voidexception.weebly.com/array-index-out-of-bounds-exception.html)
+[Sonarqube](https://rules.sonarsource.com/java/RSPEC-2912)
