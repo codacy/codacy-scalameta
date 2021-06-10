@@ -8,42 +8,40 @@ This rule raises an issue any time an `indexOf` value retrieved either from a `S
 
 Noncompliant Code Example:
 
-```
-  val color = "blue"
-  val name = "ishmael"
+    String color = "blue";
+    String name = "ishmael";
 
-  val strings = List(color, name)
+    List<String> strings = new ArrayList<String> ();
+    strings.add(color);
+    strings.add(name);
 
-  if (strings.indexOf(color) > 0) {
-    // Noncompliant
-  }
-
-  if (name.indexOf("ish") > 0) {
-    // Noncompliant
-  }
-
-  if (name.indexOf("hma") > 2) {
-    // Noncompliant
-  }
-```
+    if (strings.indexOf(color) > 0) {  // Noncompliant
+      // ...
+    }
+    if (name.indexOf("ish") > 0) { // Noncompliant
+      // ...
+    }
+    if (name.indexOf("ae") > 0) { // Noncompliant
+      // ...
+    }
 
 Compliant Solution:
 
-```
-val color = "blue"
-val name = "ishmael"
+    String color = "blue";
+    String name = "ishmael";
 
-val strings = List(color, name)
+    List<String> strings = new ArrayList<String> ();
+    strings.add(color);
+    strings.add(name);
 
-if (strings.indexOf(color) > -1) {
-  // ...
-}
-if (name.indexOf("ish") >= 0) {
-  // ...
-}
-if (name.indexOf("hma") > -1) {
-  // ...
-}
-```
+    if (strings.indexOf(color) > -1) {
+      // ...
+    }
+    if (name.indexOf("ish") >= 0) {
+      // ...
+    }
+    if (name.contains("ae") {
+      // ...
+    }
 
-[More Info](http://voidexception.weebly.com/array-index-out-of-bounds-exception.html)
+[Sonarqube](https://rules.sonarsource.com/java/RSPEC-2692)

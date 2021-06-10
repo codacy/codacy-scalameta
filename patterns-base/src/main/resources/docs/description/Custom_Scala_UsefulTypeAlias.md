@@ -1,22 +1,22 @@
 Use type aliases when they provide convenient naming or clarify purpose, but do not alias types that are self-explanatory.
 
-     () => Int
+    () => Int
 
- is clearer than
+is clearer than
 
-     type IntMaker = () => Int
-     IntMaker
+    type IntMaker = () => Int
+    IntMaker
 
- since it is both short and uses a common type. However
+since it is both short and uses a common type. However
 
-     class ConcurrentPool[K, V] {
-       type Queue = ConcurrentLinkedQueue[V]
-       type Map   = ConcurrentHashMap[K, Queue]
-       ...
-     }
+    class ConcurrentPool[K, V] {
+      type Queue = ConcurrentLinkedQueue[V]
+      type Map   = ConcurrentHashMap[K, Queue]
+      ...
+    }
 
- is helpful since it communicates purpose and enhances brevity.
+is helpful since it communicates purpose and enhances brevity.
 
- For more details:
+For more details:
 
- [Effective Scala](http://twitter.github.io/effectivescala/#Types%20and%20Generics-Type%20aliases)
+[Effective Scala](https://twitter.github.io/effectivescala/#Types%20and%20Generics-Type%20aliases)

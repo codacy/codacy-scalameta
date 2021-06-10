@@ -1,13 +1,13 @@
 The collections libraries usually provide methods that return Options. Avoid using
 
-     val x = list match { case head :: _ => head; case Nil => default }
+    val x = list match { case head :: _ => head; case Nil => default }
 
- because
+because
 
-     val x = list.headOption getOrElse default
+    val x = list.headOption getOrElse default
 
- is both shorter and communicates purpose.
+is both shorter and communicates purpose.
 
- For more details:
+For more details:
 
- [Effective Scala](https://twitter-archive.github.io/effectivescala/#Functional%20programming-Call%20by%20name)
+[Effective Scala](https://twitter.github.io/effectivescala/#Functional%20programming-Pattern%20matching)

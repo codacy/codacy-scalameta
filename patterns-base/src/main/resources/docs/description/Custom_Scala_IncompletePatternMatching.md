@@ -1,22 +1,22 @@
 Pattern matching should not have single cases with conditions:
 
- Bad:
+Bad:
 
     something match {
-        case a if false => other
+      case a if false => other
     }
 
- Good:
+Good:
 
     something match {
-        case a if false => other
-        case a if true => other
+      case a if false => other
+      case a if true => other
     }
 
- Also acceptable:
+Also acceptable:
 
     "somestring" match {
-        case "somestring" =>
+      case "somestring" =>
     }
 
- [More Info](http://docs.scala-lang.org/tutorials/tour/pattern-matching.html)
+[Scala Docs](https://docs.scala-lang.org/tutorials/tour/pattern-matching.html)
