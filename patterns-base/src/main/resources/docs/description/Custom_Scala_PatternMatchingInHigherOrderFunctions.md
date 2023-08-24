@@ -16,4 +16,4 @@ Instead of
 
  For more details:
 
- [Effective Scala](https://twitter.github.io//effectivescala/#Formatting-Pattern%20matching)
+ [Effective Scala](https://twitter.github.io/effectivescala/#Formatting-Pattern%20matching)

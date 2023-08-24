@@ -3,4 +3,4 @@ Prefer using immutable collections over the mutable ones. They are applicable in
 
  For more details:
 
- [Effective Scala](https://twitter.github.io//effectivescala/#Collections-Use)
+ [Effective Scala](https://twitter.github.io/effectivescala/#Collections-Use)
