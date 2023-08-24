@@ -17,4 +17,4 @@ Instead of using
 
  For more details:
 
- [Effective Scala](https://twitter-archive.github.io/effectivescala/#Control%20structures-Returns)
+ [Effective Scala](https://twitter.github.io//effectivescala/#Control%20structures-Returns)

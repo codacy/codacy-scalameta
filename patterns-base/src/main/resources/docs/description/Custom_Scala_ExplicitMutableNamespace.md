@@ -7,4 +7,4 @@ Don't import scala.collection.mutable._ and refer to Set, instead,
 
  For more details:
 
- [Effective Scala](https://twitter-archive.github.io/effectivescala/#Collections-Use)
+ [Effective Scala](https://twitter.github.io//effectivescala/#Collections-Use)

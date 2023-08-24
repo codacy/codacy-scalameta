@@ -1,8 +1,8 @@
 version: 2.1
 
 orbs:
-  codacy: codacy/base@4.5.1
-  codacy_plugins_test: codacy/plugins-test@0.15.4
+  codacy: codacy/base@10.2.3
+  codacy_plugins_test: codacy/plugins-test@1.1.1
 
 workflows:
   version: 2

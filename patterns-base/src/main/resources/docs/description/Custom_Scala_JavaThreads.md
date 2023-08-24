@@ -3,4 +3,4 @@ Futures allow the programmer to express concurrent computation in a declarative 
 
  For more details:
 
- [Effective Scala](https://twitter-archive.github.io/effectivescala/#Concurrency-Futures)
+ [Effective Scala](https://twitter.github.io//effectivescala/#Concurrency-Futures)
