@@ -10,4 +10,4 @@ The collections libraries usually provide methods that return Options. Avoid usi
 
  For more details:
 
- [Effective Scala](https://twitter.github.io//effectivescala/#Functional%20programming-Call%20by%20name)
+ [Effective Scala](https://twitter.github.io/effectivescala/#Functional%20programming-Call%20by%20name)

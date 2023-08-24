@@ -2,4 +2,4 @@ Using util.Try is a good, idiomatic choice, as it harnesses the type system to e
 
  For more details:
 
- [Effective Scala](https://twitter.github.io//effectivescala/#Error%20handling)
+ [Effective Scala](https://twitter.github.io/effectivescala/#Error%20handling)
