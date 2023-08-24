@@ -1,1 +1,1 @@
-addSbtPlugin("com.codacy" % "codacy-sbt-plugin" % "20.0.7")
+addSbtPlugin("com.codacy" % "codacy-sbt-plugin" % "25.0.0")
