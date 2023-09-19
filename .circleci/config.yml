@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  codacy: codacy/base@10.2.3
+  codacy: codacy/base@10.8.0
   codacy_plugins_test: codacy/plugins-test@1.1.1
 
 workflows:
@@ -27,6 +27,7 @@ workflows:
           requires:
             - publish_docker_local
       - codacy/publish_docker:
+          context: CodacyDocker
           filters:
             branches:
               only: master
