@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  codacy: codacy/base@10.8.0
+  codacy: codacy/base@12.2.0
   codacy_plugins_test: codacy/plugins-test@1.1.1
 
 workflows:
@@ -36,7 +36,7 @@ workflows:
             - plugins_test
       - codacy/sbt:
           name: publish_sonatype
-          cmd: sbt retrieveGPGKeys core/publishSigned sonatypeBundleRelease
+          cmd: sbt retrieveGPGKeys core/publishSigned sonatypeCentralRelease
           filters:
             branches:
               only: master
