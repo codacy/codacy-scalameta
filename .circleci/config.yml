@@ -41,6 +41,7 @@ workflows:
             branches:
               only: master
           context: CodacyAWS
+          no_output_timeout: "30m"
           cache_prefix: sbt-cache-15092020
           requires:
             - publish_docker_local
