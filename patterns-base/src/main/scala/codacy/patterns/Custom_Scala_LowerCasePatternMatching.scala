@@ -14,11 +14,15 @@ case object Custom_Scala_LowerCasePatternMatching extends Pattern {
   }
 
   private[this] def isOffender(tree: Tree, pat: Pat) = {
-    !hasDeclaredType(pat) && !isCaseFromCollect(tree) && !isCaseFromPartialFunction(tree) && isLowerCase(pat)
+    !hasDeclaredType(pat) &&
+    !isCaseFromCollect(tree) &&
+    !isCaseFromPartialFunction(tree) &&
+    !isCaseFromCatch(tree) &&
+    isLowerCase(pat)
   }
 
   private[this] def isPartialApplication(tpe: Term.Name) = tpe.toString match {
-    case "orElse" | "andThen" => true
+    case "orElse" | "andThen" | "recover" | "recoverWith" => true
     case _ => false
   }
 
@@ -54,6 +58,13 @@ case object Custom_Scala_LowerCasePatternMatching extends Pattern {
   private[this] def hasDeclaredType(pat: Pat) = {
     pat.collect { case t @ p"$expr: $tpe" => t }.nonEmpty
   }
+
+  private[this] def isCaseFromCatch(tree: Tree): Boolean = {
+  tree.parent.exists {
+    case t: Term.Try => t.catchp.exists(_ == tree)
+    case _           => false
+  }
+}
 
   private[this] def message(tree: Tree) = Message("Lower case pattern matching.")
 }
