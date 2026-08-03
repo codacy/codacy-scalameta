@@ -6,12 +6,13 @@ name := "codacy-patterns-core"
 val scalaLib = "org.scala-lang" % "scala-library" % scalaV
 val scalaCompiler = "org.scala-lang" % "scala-compiler" % scalaV
 val scalameta = "org.scalameta" %% "scalameta" % "4.17.2" withSources ()
+val scalametaContrib = "org.scalameta" %% "contrib" % "4.0.0" withSources ()
 
 scalaVersion := scalaV
 
 organization := "com.codacy"
 
-libraryDependencies ++= Seq(scalameta, scalaLib, scalaReflect, scalaCompiler)
+libraryDependencies ++= Seq(scalameta, scalametaContrib, scalaLib, scalaReflect, scalaCompiler)
 
 startYear := Some(2016)
 

@@ -100,6 +100,9 @@ object CodacyScalameta extends Tool {
 
           case Failure(error) =>
             List(Result.FileError(sourcePath, Option(ErrorMessage(error.getMessage))))
+
+          case _ =>
+            List(Result.FileError(sourcePath, Option(ErrorMessage("Unknown parsing error"))))
         }
 
       case _ => List.empty

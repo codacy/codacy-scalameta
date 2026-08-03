@@ -13,24 +13,20 @@ class Custom_Scala_FieldNamesChecker(configuration: Custom_Scala_FieldNamesCheck
     tree
       .collect {
         //val definitions
-        case t @ q"..$_ val ..$patsnel: $tpe = $expr"
-            if configuration.includeEnums || !isEnumValDefRegexOrDecl(t.parent, Option(expr), tpe) =>
-          conflictingNames(patsnel)
-        //val declarations
-        case t @ q"..$_ val ..$pnamesnel: $tpe"
-            if configuration.includeEnums || !isEnumValDefRegexOrDecl(t.parent, tpe = Option(tpe)) =>
-          conflictingNames(pnamesnel)
+        case defn: Defn.Val =>
+          if (configuration.includeEnums || !isEnumValDefRegexOrDecl(defn.parent, Some(defn.rhs), defn.decltpe))
+            conflictingNames(defn.pats)
+          else
+            Iterable.empty
         //var definitions
-        case t @ q"..$_ var ..$patsnel: $tpe = $expr"
-            if configuration.includeEnums || !isEnumValDefRegexOrDecl(t.parent, expr, tpe) =>
-          conflictingNames(patsnel)
-        //var declarations
-        case t @ q"..$_ var ..$pnamesnel: $tpe"
-            if configuration.includeEnums || !isEnumValDefRegexOrDecl(t.parent, tpe = Option(tpe)) =>
-          conflictingNames(pnamesnel)
+        case defn: Defn.Var =>
+          if (configuration.includeEnums || !isEnumValDefRegexOrDecl(defn.parent, defn.rhs, defn.decltpe))
+            conflictingNames(defn.pats)
+          else
+            Iterable.empty
         //parameter values
-        case t @ param"..$mods $paramname: $atpeopt = $expropt" if isConflictingName(paramname) =>
-          List(paramname)
+        case param: Term.Param if isConflictingName(param.name) =>
+          List(param.name)
       }
       .flatten
       .map { tree =>
@@ -39,7 +35,7 @@ class Custom_Scala_FieldNamesChecker(configuration: Custom_Scala_FieldNamesCheck
       .toSet
   }
 
-  private[this] def isEnumValDefRegexOrDecl(parent: Option[Tree], expr: Option[Tree] = None, tpe: Option[Type]) = {
+  private[this] def isEnumValDefRegexOrDecl(parent: Option[Tree], expr: Option[Tree], tpe: Option[Type]) = {
     val extendsEnumeration: Boolean = parent
       .collect {
         case template"{ ..$stats } with ..${ctorcalls: Seq[Init]} { $param => ..$stats2 }" =>
