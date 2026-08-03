@@ -8,9 +8,9 @@ case object Custom_Scala_IndexOfPositive extends Pattern {
 
   override def apply(tree: Tree): List[Result] = {
     tree.collect {
-      case t @ q"$_.indexOf( ..${args: Seq[Term]}) > ${lit: Lit}" if isNaturalNumber(lit) =>
+      case t @ q"$_.indexOf( ..${args: Term.ArgClause}) > ${lit: Lit}" if isNaturalNumber(lit) =>
         Result(message(t), t)
-      case t @ q"${lit: Lit} < $_.indexOf( ..${args: Seq[Term]})" if isNaturalNumber(lit) =>
+      case t @ q"${lit: Lit} < $_.indexOf( ..${args: Term.ArgClause})" if isNaturalNumber(lit) =>
         Result(message(t), t)
     }
   }

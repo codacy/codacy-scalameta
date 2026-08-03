@@ -10,25 +10,24 @@ case object Custom_Scala_GroupImports extends Pattern {
     tree
       .collect {
         case t: Template =>
-          t.stats
+          imports(t.stats)
         case q"package $ref { ..$stats }" =>
-          stats
+          imports(stats)
         case t: Term.Block =>
-          t.stats
+          imports(t.stats)
       }
-      .map(imports)
       .flatMap(duplicatedImporters)
       .map { tree =>
         Result(message(tree), tree)
       }
   }
 
-  private[this] def duplicatedImporters(imports: Seq[Tree]) = {
+  private[this] def duplicatedImporters(imports: Seq[Tree]): Seq[Tree] = {
     val tupled = imports.collect { case t @ importer"$ref.{..$importeesnel}" => (ref, t) }
 
     tupled
       .groupBy { case (ref, _) => ref.toString }
-      .collect {
+      .flatMap {
         case (_, importers) if importers.length > 1 =>
           importers
             .map { case (_, importer) => importer }
@@ -36,11 +35,12 @@ case object Custom_Scala_GroupImports extends Pattern {
               (importer.pos.startLine, importer.pos.startColumn)
             }
             .take(1)
+        case _ => Seq.empty
       }
-      .flatten
+      .toSeq
   }
 
-  private[this] def imports(body: Seq[Tree]) = {
+  private[this] def imports(body: Seq[Tree]): Seq[Tree] = {
     body.collect { case t @ q"import ..$importersnel" => importersnel }.flatten
   }
 
