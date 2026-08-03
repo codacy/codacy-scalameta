@@ -8,9 +8,9 @@ case object Custom_Scala_GetInMethodName extends Pattern {
 
   override def apply(tree: Tree) = {
     tree.collect {
-      case t @ q"..$mods def ${name: Term.Name}[..$tparams](...$paramss): $tpeopt = $expr"
-          if name.value != "get" && name.value.startsWith("get") =>
-        Result(message(t), t)
+      case defn: Defn.Def
+          if defn.name.value != "get" && defn.name.value.startsWith("get") =>
+        Result(message(defn), defn)
     }
   }
 

@@ -8,7 +8,7 @@ case object Custom_Scala_LowerCasePatternMatching extends Pattern {
 
   override def apply(tree: Tree) = {
     tree.collect {
-      case t @ p"case ${pat: Pat.Var} => $expr" if isOffender(t, pat) =>
+      case t @ Case(pat: Pat.Var, _, _) if isOffender(t, pat) =>
         Result(message(t), t)
     }
   }
@@ -21,27 +21,22 @@ case object Custom_Scala_LowerCasePatternMatching extends Pattern {
     isLowerCase(pat)
   }
 
-  private[this] def isPartialApplication(tpe: Term.Name) = tpe.toString match {
-    case "orElse" | "andThen" | "recover" | "recoverWith" => true
-    case _ => false
-  }
 
   private[this] def isCaseFromPartialFunction(tree: Tree): Boolean = {
     tree.parent.flatMap(_.parent).exists {
-      case q"..$mods val ..$patsnel: $tpeopt = { ..case $casesnel }" => true
-      case q"$expr $tpe { ..case $casesnel}" if isPartialApplication(tpe) => true
-      case q"$expr.$tpe { ..case $casesnel }" if isPartialApplication(tpe) => true
-      case q"$expr $tpe[..$tpesnel] { ..case $casesnel }" if isPartialApplication(tpe) => true
-      case q"$expr.$tpe[..$tpesnel] { ..case $casesnel }" if isPartialApplication(tpe) => true
+      case _: Defn.Val => true
+      case block: Term.Block =>
+        block.stats.exists {
+          case _: Term.CasesBlock => true
+          case _ => false
+        }
       case _ => false
     }
   }
 
   private[this] def isCaseFromCollect(tree: Tree): Boolean = {
     tree.parent.flatMap(_.parent).exists {
-      case q"$_.collect(..$_)" => true
-      case q"$_.collect[..$_](..$_)" => true
-      case q"$_ collect $_" => true
+      case Term.Apply(Term.Select(_, Term.Name("collect")), _) => true
       case _ => false
     }
   }

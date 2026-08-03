@@ -14,7 +14,8 @@ case object Custom_Scala_EnforceMinimumVisibility extends Pattern {
   private[this] def isInner(tree: Defn) = tree match {
     case t @ (_: Defn.Trait | _: Defn.Class | _: Defn.Object) =>
       t.parent.exists {
-        case q"package $_ { ..$_ }" => false
+        case _: Pkg => false
+        case _: Pkg.Object => false
         case _ => true
       }
     case _ => true

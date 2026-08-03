@@ -53,21 +53,21 @@ case object Custom_Scala_UnusedPrivateVariables extends Pattern {
   }
 
   private[this] def hasParamOrValDefWithName(tree: Tree, name: Term.Name): Boolean = {
-    //does the tree have a parameter with the given name?
     val paramWithName = tree.collect {
-      case param"..$mods ${paramname: Term.Name}: $atpeopt = $expropt" if paramname != name =>
-        paramname
+      case param: Term.Param if param.name != name =>
+        param.name
     }
-    //does the tree have a valDef with the given name?
+
     val valDefWithName = tree.collect {
-      case q"..${mods: Seq[Mod]} val ..${patsnel: Seq[Pat]}: $tpeopt = $expr" =>
-        patsnel.flatMap(_.collect { case n: Term.Name if n != name => n })
+      case defn: Defn.Val =>
+        defn.pats.flatMap(_.collect { case n: Term.Name if n != name => n })
+      case defn: Defn.Var =>
+        defn.pats.flatMap(_.collect { case n: Term.Name if n != name => n })
     }.flatten
 
-    //does the tree have a defDef with the given name?
     val defDefWithName = tree.collect {
-      case q"..$mods def ${name: Term.Name}[..$tparams](...$paramss): $tpeopt = $expr" =>
-        name
+      case defn: Defn.Def if defn.name != name =>
+        defn.name
     }
 
     (paramWithName ++ valDefWithName ++ defDefWithName).exists(_.toString() == name.toString())
@@ -89,28 +89,27 @@ case object Custom_Scala_UnusedPrivateVariables extends Pattern {
     tree
       .collect {
         //valDefs
-        case t @ q"..${mods: Seq[Mod]} val ..${patsnel: Seq[Pat]}: $tpeopt = $expr"
-            if isPrivate(mods) && !isImplicit(mods) =>
-          //first parent should be the stats List[Tree], 2nd the class itself
+        case t: Defn.Val if isPrivate(t.mods) && !isImplicit(t.mods) =>
           t.parent.flatMap(_.parent).map { classDef =>
-            (classDef, patsnel.flatMap(_.collect { case p"${name: Term.Name}" => name }))
+            (classDef, extractNames(t.pats))
+          }
+        //varDefs
+        case t: Defn.Var if isPrivate(t.mods) && !isImplicit(t.mods) =>
+          t.parent.flatMap(_.parent).map { classDef =>
+            (classDef, extractNames(t.pats))
           }
         //paramVals
-        case t @ param"..$mods ${paramname: Term.Name}: $atpeopt = $expropt" if isPrivate(mods) && !isImplicit(mods) =>
-          //first parent should be the constructor def, 2nd the class itself
+        case t: Term.Param if isPrivate(t.mods) && !isImplicit(t.mods) =>
           t.parent.flatMap(_.parent).map { classDef =>
-            (classDef, List(paramname))
+            (classDef, List(t.name))
           }
       }
       .flatten
       .groupBy { case (template, _) => template }
-      .map {
-        case (template, lists) =>
-          (template, lists.flatMap { case (_, names) => names })
-      }
       .toList
       .flatMap {
-        case (template, names) =>
+        case (template, lists) =>
+          val names: List[Term.Name] = lists.flatMap { case (_, ns) => ns }.asInstanceOf[List[Term.Name]]
           allStatsForName(template, names, tree)
       }
   }
@@ -128,11 +127,11 @@ case object Custom_Scala_UnusedPrivateVariables extends Pattern {
             Option(classDef.ctor) ++
             companionStats(classDef.name, tree)
 
-        case q"..$mods trait ${name: Type.Name}[..$tparams] extends $template" =>
-          List(template) ++ companionStats(name, tree)
+        case traitDef: Defn.Trait =>
+          traitDef.templ.stats ++ companionStats(traitDef.name, tree)
 
-        case q"..$mods object $name extends $template" =>
-          List(template)
+        case objDef: Defn.Object =>
+          objDef.templ.stats
       }
       .getOrElse(List.empty)
 
@@ -141,9 +140,17 @@ case object Custom_Scala_UnusedPrivateVariables extends Pattern {
 
   private[this] def companionStats(name: Type.Name, tree: Tree): Option[Tree] = {
     tree.collect {
-      case q"..$mods object ${oName: Term.Name} extends ${template: Tree}" if name.toString() == oName.toString =>
-        template
+      case obj: Defn.Object if name.toString() == obj.name.toString =>
+        obj.templ
     }.headOption
+  }
+
+  private[this] def extractNames(pats: Seq[Pat]): List[Term.Name] = {
+    pats.flatMap {
+      case Pat.Var(name) => List(name)
+      case p"(..$inPats)" => extractNames(inPats)
+      case _ => Nil
+    }.toList
   }
 
   private[this] def message(name: Term.Name) = Message(s"Unused private variable.")

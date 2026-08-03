@@ -24,7 +24,15 @@ class Custom_Scala_FieldNamesChecker(configuration: Custom_Scala_FieldNamesCheck
             conflictingNames(defn.pats)
           else
             Iterable.empty
-        //parameter values
+        //class parameters
+        case defn: Defn.Class =>
+          defn.ctor.paramss.flatMap { params =>
+            params.collect {
+              case param if isConflictingName(param.name) =>
+                param.name
+            }
+          }
+        //parameter values (method parameters)
         case param: Term.Param if isConflictingName(param.name) =>
           List(param.name)
       }

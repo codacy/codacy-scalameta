@@ -10,19 +10,17 @@ case object Custom_Scala_ProhibitObjectName extends Pattern {
     tree.collect {
       case t: Defn.Class =>
         defsWithNameIn(t, t.name.toString)
-      case t @ q"..$mods trait $tname[..$tparams] extends $template" =>
-        defsWithNameIn(t, tname.toString)
-      case t @ q"..$mods object $name extends $template" =>
-        defsWithNameIn(t, name.toString)
+      case t: Defn.Trait =>
+        defsWithNameIn(t, t.name.toString)
+      case t: Defn.Object =>
+        defsWithNameIn(t, t.name.toString)
 
     }.flatten
   }
 
   private[this] def defsWithNameIn(tree: Tree, cName: String) = {
     tree.collect {
-      case t @ q"..$mods def $name[..$tparams](...$paramss): $tpeopt = $expr" if name.toString.endsWith(cName) =>
-        Result(message(t), t)
-      case t @ q"..$mods def $name[..$tparams](...$paramss): $tpe" if name.toString.endsWith(cName) =>
+      case t: Defn.Def if t.name.toString.endsWith(cName) =>
         Result(message(t), t)
     }
   }

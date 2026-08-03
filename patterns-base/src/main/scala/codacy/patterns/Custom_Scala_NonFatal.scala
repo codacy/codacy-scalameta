@@ -9,8 +9,8 @@ case object Custom_Scala_NonFatal extends Pattern {
 
   override def apply(tree: Tree) = {
     tree.collect {
-      case t @ q"try $expr catch { ..case $cases } finally $expropt" =>
-        cases.collect {
+      case t: Term.Try =>
+        t.catchp.collect {
           case cs if isNonFatalCatch(cs) =>
             Result(message(cs), cs)
         }
