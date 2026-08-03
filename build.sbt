@@ -104,7 +104,7 @@ val dockerUser = "docker"
 
 daemonUser in Docker := dockerUser
 
-dockerBaseImage := "amazoncorretto:8-alpine3.14-jre"
+dockerBaseImage := "amazoncorretto:8-alpine3.24-jre"
 
 dockerCommands := dockerCommands.value.flatMap {
   case cmd @ Cmd("ADD", _) =>
