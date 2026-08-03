@@ -46,11 +46,13 @@ case object Custom_Scala_LowerCasePatternMatching extends Pattern {
     }
   }
 
-  private[this] def isLowerCase(pat: Pat): Boolean = pat match {
-    case Pat.Var(name) =>
-      name.value.headOption.exists(c => Character.isLowerCase(c))
-    case _ =>
-      false
+  private[this] def isLowerCase(pat: Pat) = {
+    pat match {
+      case q"${name: Pat.Var}" =>
+        name.name.value.headOption.exists(Character.isLowerCase)
+      case _ =>
+        false
+    }
   }
 
   private[this] def hasDeclaredType(pat: Pat) = {
